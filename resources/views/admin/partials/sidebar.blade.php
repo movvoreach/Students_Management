@@ -121,9 +121,9 @@
     <!-- BRAND -->
     <a href="#" class="brand-link shadow-sm"
         style="color:white; display:flex; align-items:center; padding:0.6rem 1rem;">
-        <img src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png"
             style="width:40px; height:35px; margin-right:10px;">
-        <span class="brand-text">BAS System</span>
+        <span class="brand-text">Student System</span>
     </a>
 
     <div class="sidebar">
@@ -148,40 +148,14 @@
                     </a>
                 </li>
 
-                <!-- BOOK MANAGEMENT -->
-                <li class="nav-header text-uppercase">Book Management</li>
+                <!-- STUDENT MANAGEMENT -->
+                <li class="nav-header text-uppercase">Student Management</li>
 
                 <li class="nav-item has-treeview menu-open">
-                    <a href="" class="nav-link ">
-                        <i class="nav-icon fas fa-book"></i>
-                        <p>
-                            Books
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('books.create') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Add Book</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('books.index') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Book List</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- PUBLISHERS -->
-                <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-truck"></i>
+                        <i class="nav-icon fas fa-user-graduate"></i>
                         <p>
-                            Publishers
+                            Students
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -190,67 +164,78 @@
                         <li class="nav-item">
                             <a href="" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Add Publisher</p>
+                                <p>Add Student</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('publishers.index') }}" class="nav-link">
+                            <a href="/student" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Publisher List</p>
+                                <p>Student List</p>
                             </a>
                         </li>
                     </ul>
                 </li>
 
-                <!-- SALES -->
-                <li class="nav-header text-uppercase">Sales</li>
+                <!-- TEACHERS -->
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                        <p>
+                            Teachers
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/teachers/create" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Add Teacher</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/teachers" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Teacher List</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- CLASS / COURSE -->
+                <li class="nav-header text-uppercase">Academics</li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-cash-register"></i>
-                        <p>New Sale</p>
+                    <a href="/schedule" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>Schedule</p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-receipt"></i>
-                        <p>Sales History</p>
+                    <a href="/classes" class="nav-link">
+                        <i class="nav-icon fas fa-school"></i>
+                        <p>Classes</p>
                     </a>
                 </li>
 
-                <!-- STOCK -->
-                <li class="nav-header text-uppercase">Inventory</li>
+                <!-- ATTENDANCE -->
+                <li class="nav-header text-uppercase">Attendance</li>
 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-boxes"></i>
-                        <p>Stock Management</p>
+                        <i class="nav-icon fas fa-calendar-check"></i>
+                        <p>Attendance</p>
                     </a>
                 </li>
 
-                <!-- REQUEST -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-shopping-cart"></i>
-                        <p>Book Requests</p>
-                    </a>
-                </li>
-
-                <!-- REPORT -->
+                <!-- REPORTS -->
                 <li class="nav-header text-uppercase">Reports</li>
 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-chart-line"></i>
-                        <p>Sales Report</p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-pie"></i>
-                        <p>Inventory Report</p>
+                        <p>Student Report</p>
                     </a>
                 </li>
 

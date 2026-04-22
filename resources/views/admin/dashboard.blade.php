@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Book-shop Automation Software (BAS)')
+@section('title', 'Student Management System')
 
 @section('content')
 
@@ -33,16 +33,18 @@
 </style>
 
 <section class="content mt-4">
+
+    <!-- CONTENT HEADER -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Book-shop Automation Software (BAS)</h1>
+                    <h1 class="m-0">Student Management System (SMS)</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Book-shop Automation Software (BAS)</li>
+                        <li class="breadcrumb-item active">Student Management System</li>
                     </ol>
                 </div>
             </div>
@@ -52,12 +54,12 @@
     <section class="content">
         <div class="container-fluid">
 
-            <!-- Filter Section -->
+            <!-- FILTER -->
             <div class="row mb-3">
                 <div class="col-12">
                     <div class="card card-outline card-primary collapsed-card">
                         <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-filter"></i> Filter Data</h3>
+                            <h3 class="card-title"><i class="fas fa-filter"></i> Filter Students</h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-plus"></i>
@@ -65,81 +67,58 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="display: none;">
-                            <form action="#" method="GET" id="filterForm">
+                        <div class="card-body" style="display:none;">
+                            <form>
                                 <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <label>Quick Date Range</label>
-                                        <div class="btn-group btn-group-sm d-flex" role="group">
-                                            <button type="button" class="btn btn-outline-primary">Today</button>
-                                            <button type="button" class="btn btn-outline-primary">This Week</button>
-                                            <button type="button" class="btn btn-outline-primary">This Month</button>
-                                            <button type="button" class="btn btn-outline-primary">Last Month</button>
-                                            <button type="button" class="btn btn-outline-primary">This Year</button>
-                                            <button type="button" class="btn btn-outline-secondary">Clear</button>
-                                        </div>
+
+                                    <div class="col-md-3">
+                                        <label>Class</label>
+                                        <select class="form-control form-control-sm">
+                                            <option>All Classes</option>
+                                            <option>Year 1</option>
+                                            <option>Year 2</option>
+                                            <option>Year 3</option>
+                                        </select>
                                     </div>
 
                                     <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Date From</label>
-                                            <div class="input-group input-group-sm">
-                                                <input type="text" class="form-control form-control-sm" placeholder="YYYY-MM-DD">
-                                                <div class="input-group-append">
-                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <label>Department</label>
+                                        <select class="form-control form-control-sm">
+                                            <option>All Departments</option>
+                                            <option>IT</option>
+                                            <option>Business</option>
+                                            <option>Engineering</option>
+                                        </select>
                                     </div>
 
                                     <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Date To</label>
-                                            <div class="input-group input-group-sm">
-                                                <input type="text" class="form-control form-control-sm" placeholder="YYYY-MM-DD">
-                                                <div class="input-group-append">
-                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <label>Status</label>
+                                        <select class="form-control form-control-sm">
+                                            <option>All</option>
+                                            <option>Active</option>
+                                            <option>Inactive</option>
+                                            <option>Graduated</option>
+                                        </select>
                                     </div>
 
                                     <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Book Status</label>
-                                            <select class="form-control form-control-sm">
-                                                <option>All Status</option>
-                                                <option>Available</option>
-                                                <option>Out of Stock</option>
-                                                <option>Requested</option>
-                                                <option>Sold</option>
-                                            </select>
-                                        </div>
+                                        <label>Gender</label>
+                                        <select class="form-control form-control-sm">
+                                            <option>All</option>
+                                            <option>Male</option>
+                                            <option>Female</option>
+                                        </select>
                                     </div>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Book Category</label>
-                                            <select class="form-control form-control-sm">
-                                                <option>All Categories</option>
-                                                <option>Programming</option>
-                                                <option>Networking</option>
-                                                <option>Database</option>
-                                                <option>English</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="fas fa-search"></i> Apply Filter
-                                        </button>
-                                        <a href="#" class="btn btn-secondary btn-sm">
-                                            <i class="fas fa-redo"></i> Reset
-                                        </a>
-                                    </div>
+                                <div class="mt-3">
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="fas fa-search"></i> Apply Filter
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm">
+                                        Reset
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -147,97 +126,88 @@
                 </div>
             </div>
 
-            <!-- Statistics Row 1 -->
+            <!-- STATS ROW 1 -->
             <div class="row">
+
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>120</h3>
-                            <p>Total Books</p>
+                            <h3>850</h3>
+                            <p>Total Students</p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-book"></i>
+                            <i class="fas fa-user-graduate"></i>
                         </div>
-                        <a href="#" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
-                        </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>95</h3>
-                            <p>Available Books</p>
+                            <h3>720</h3>
+                            <p>Active Students</p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-check-circle"></i>
+                            <i class="fas fa-user-check"></i>
                         </div>
-                        <a href="#" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
-                        </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>35</h3>
-                            <p>Total Requests</p>
+                            <h3>95%</h3>
+                            <p>Attendance Rate</p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-shopping-cart"></i>
+                            <i class="fas fa-calendar-check"></i>
                         </div>
-                        <a href="#" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
-                        </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-danger">
                         <div class="inner">
-                            <h3>$2,450</h3>
-                            <p>Total Sales</p>
+                            <h3>45</h3>
+                            <p>New Admissions</p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-dollar-sign"></i>
+                            <i class="fas fa-user-plus"></i>
                         </div>
-                        <a href="#" class="small-box-footer">
-                            More info <i class="fas fa-arrow-circle-right"></i>
-                        </a>
                     </div>
                 </div>
+
             </div>
 
-            <!-- Statistics Row 2 -->
+            <!-- STATS ROW 2 -->
             <div class="row">
+
                 <div class="col-lg-3 col-6">
                     <div class="info-box">
-                        <span class="info-box-icon bg-primary"><i class="fas fa-store"></i></span>
+                        <span class="info-box-icon bg-primary"><i class="fas fa-school"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Books Sold</span>
-                            <span class="info-box-number">540</span>
+                            <span class="info-box-text">Classes</span>
+                            <span class="info-box-number">24</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-6">
                     <div class="info-box">
-                        <span class="info-box-icon bg-info"><i class="fas fa-user-plus"></i></span>
+                        <span class="info-box-icon bg-info"><i class="fas fa-chalkboard-teacher"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">New Customers</span>
-                            <span class="info-box-number">12</span>
+                            <span class="info-box-text">Teachers</span>
+                            <span class="info-box-number">35</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-6">
                     <div class="info-box">
-                        <span class="info-box-icon bg-warning"><i class="fas fa-truck"></i></span>
+                        <span class="info-box-icon bg-warning"><i class="fas fa-book"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Publishers</span>
-                            <span class="info-box-number">8</span>
+                            <span class="info-box-text">Courses</span>
+                            <span class="info-box-number">18</span>
                         </div>
                     </div>
                 </div>
@@ -246,213 +216,103 @@
                     <div class="info-box">
                         <span class="info-box-icon bg-success"><i class="fas fa-chart-line"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Month Revenue</span>
-                            <span class="info-box-number">$1,250.00</span>
+                            <span class="info-box-text">Monthly Growth</span>
+                            <span class="info-box-number">+12%</span>
                         </div>
                     </div>
                 </div>
+
             </div>
 
-            <!-- Main Tables -->
+            <!-- TABLES -->
             <div class="row">
+
+                <!-- RECENT STUDENTS -->
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header border-0">
                             <h3 class="card-title">
-                                <i class="fas fa-list mr-1"></i>
-                                Recent Book Sales
+                                <i class="fas fa-user-graduate mr-1"></i>
+                                Recent Students
                             </h3>
-                            <div class="card-tools">
-                                <a href="#" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-eye"></i> View All
-                                </a>
-                            </div>
                         </div>
 
                         <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
+                            <table class="table table-sm">
+                                <thead>
                                     <tr>
-                                        <th>Customer</th>
-                                        <th>Book</th>
+                                        <th>Name</th>
+                                        <th>Class</th>
                                         <th>Date</th>
                                         <th>Status</th>
                                     </tr>
-                                    </thead>
-                                    <tbody>
+                                </thead>
+                                <tbody>
                                     <tr>
                                         <td>Mov Vo Reach</td>
-                                        <td>Laravel 12 Guide</td>
-                                        <td>Mar 10, 2026</td>
-                                        <td><span class="badge badge-success">Sold</span></td>
+                                        <td>Year 3</td>
+                                        <td>2026-03-10</td>
+                                        <td><span class="badge badge-success">Active</span></td>
                                     </tr>
                                     <tr>
                                         <td>Sok Dara</td>
-                                        <td>Networking Basics</td>
-                                        <td>Mar 12, 2026</td>
+                                        <td>Year 2</td>
+                                        <td>2026-03-12</td>
                                         <td><span class="badge badge-warning">Pending</span></td>
                                     </tr>
                                     <tr>
                                         <td>Chanthy</td>
-                                        <td>Flutter Development</td>
-                                        <td>Mar 15, 2026</td>
-                                        <td><span class="badge badge-info">Delivered</span></td>
+                                        <td>Year 1</td>
+                                        <td>2026-03-15</td>
+                                        <td><span class="badge badge-info">New</span></td>
                                     </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
 
+                <!-- ATTENDANCE -->
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-header border-0">
                             <h3 class="card-title">
-                                <i class="fas fa-book-reader mr-1"></i>
-                                Requested Books
+                                <i class="fas fa-calendar-check mr-1"></i>
+                                Attendance Records
                             </h3>
-                            <div class="card-tools">
-                                <span class="badge badge-info">Latest Requests</span>
-                            </div>
                         </div>
 
                         <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
+                            <table class="table table-sm">
+                                <thead>
                                     <tr>
-                                        <th>Book</th>
-                                        <th>Author</th>
-                                        <th>Request Count</th>
-                                        <th>Status</th>
+                                        <th>Student</th>
+                                        <th>Date</th>
+                                        <th>Attendance</th>
                                     </tr>
-                                    </thead>
-                                    <tbody>
+                                </thead>
+                                <tbody>
                                     <tr>
-                                        <td>Advanced PHP</td>
-                                        <td>John Smith</td>
-                                        <td>5</td>
-                                        <td><span class="badge badge-warning">Requested</span></td>
+                                        <td>John Doe</td>
+                                        <td>2026-03-10</td>
+                                        <td><span class="badge badge-success">Present</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Cyber Security</td>
+                                        <td>Jane Smith</td>
+                                        <td>2026-03-10</td>
+                                        <td><span class="badge badge-danger">Absent</span></td>
+                                    </tr>
+                                    <tr>
                                         <td>David Lee</td>
-                                        <td>3</td>
-                                        <td><span class="badge badge-danger">Out of Stock</span></td>
+                                        <td>2026-03-10</td>
+                                        <td><span class="badge badge-success">Present</span></td>
                                     </tr>
-                                    <tr>
-                                        <td>Database Design</td>
-                                        <td>Maria Kim</td>
-                                        <td>4</td>
-                                        <td><span class="badge badge-success">Available</span></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chart + Stats -->
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="card">
-                        <div class="card-header border-0">
-                            <div class="d-flex justify-content-between">
-                                <h3 class="card-title">
-                                    <i class="fas fa-chart-line mr-1"></i>
-                                    Sales Trend
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="salesChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display:block;"></canvas>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-header border-0">
-                            <h3 class="card-title">
-                                <i class="fas fa-chart-pie mr-1"></i>
-                                Inventory Statistics
-                            </h3>
-                        </div>
-                        <div class="card-body">
-
-                            <div class="info-box mb-3 bg-info">
-                                <span class="info-box-icon"><i class="fas fa-book-open"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Total Inventory</span>
-                                    <span class="info-box-number">210</span>
-                                </div>
-                            </div>
-
-                            <div class="info-box mb-3 bg-success">
-                                <span class="info-box-icon"><i class="fas fa-certificate"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Books Sold</span>
-                                    <span class="info-box-number">95</span>
-                                </div>
-                            </div>
-
-                            <div class="info-box bg-warning">
-                                <span class="info-box-icon"><i class="fas fa-clock"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Pending Requests</span>
-                                    <span class="info-box-number">12</span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-bolt mr-1"></i>
-                                Quick Actions
-                            </h3>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-3 col-6">
-                                    <a href="#" class="btn btn-app bg-primary">
-                                        <i class="fas fa-plus"></i> Add Book
-                                    </a>
-                                </div>
-
-                                <div class="col-md-3 col-6">
-                                    <a href="#" class="btn btn-app bg-success">
-                                        <i class="fas fa-user-plus"></i> Add Customer
-                                    </a>
-                                </div>
-
-                                <div class="col-md-3 col-6">
-                                    <a href="#" class="btn btn-app bg-info">
-                                        <i class="fas fa-truck"></i> Publishers
-                                    </a>
-                                </div>
-
-                                <div class="col-md-3 col-6">
-                                    <a href="#" class="btn btn-app bg-warning">
-                                        <i class="fas fa-chart-bar"></i> Reports
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
         </div>

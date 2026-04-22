@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Admin Dashboard | LMS')</title>
-    <link rel="icon" type="image/png" href="{{ asset('backend/dist/img/spilogo.png') }}">
+    {{-- <link rel="icon" type="image/png" href="{{ asset('backend/dist/img/spilogo.png') }}"> --}}
     <link rel="stylesheet" href="{{ asset('backend/plugins/fontawesome-free/css/all.min.css') }}">
     {{-- ✅ Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
