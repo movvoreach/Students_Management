@@ -25,10 +25,10 @@ class Student extends Model
         'email',
         'image',
     ];
-    public function classes()
-    {
-        return $this->belongsToMany(Classroom::class, 'enrollments');
-    }
+    // public function classes()
+    // {
+    //     return $this->belongsToMany(Classroom::class, 'enrollments');
+    // }
 
 public function schedules()
 {
@@ -38,5 +38,9 @@ public function schedules()
         'student_id',
         'schedule_id'
     );
+}
+public function classes()
+{
+    return $this->belongsToMany(Classroom::class, 'enrollments', 'student_id', 'class_id');
 }
 }

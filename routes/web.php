@@ -11,14 +11,21 @@ use App\Http\Controllers\ScheduleController;
 Route::get('/', fn () => view('admin.dashboard'))->name('dashboard')->middleware('auth');
 
 
-Route::get('/student', [StudentController::class, 'index'])->name('student.index');
-Route::get('/student/create', [StudentController::class, 'create'])->name('student.create');
-Route::post('/student/store', [StudentController::class, 'store'])->name('student.store');
-Route::get('/student/edit/{id}', [StudentController::class, 'edit'])->name('student.edit');
-Route::put('/student/update/{id}', [StudentController::class, 'update'])
-    ->name('student.update');
-Route::delete('/student/delete/{id}', [StudentController::class, 'destroy'])->name('student.destroy');
-Route::get('/student/show/{id}', [StudentController::class, 'show'])->name('student.show');
+Route::prefix('student')->name('student.')->group(function () {
+    Route::get('/', [StudentController::class, 'index'])->name('index');
+    Route::get('/create', [StudentController::class, 'create'])->name('create');
+    Route::post('/store', [StudentController::class, 'store'])->name('store');
+    Route::get('/edit/{student}', [StudentController::class, 'edit'])->name('edit');
+    Route::put('/update/{student}', [StudentController::class, 'update'])->name('update');
+    Route::delete('/delete/{student}', [StudentController::class, 'destroy'])->name('destroy');
+    Route::get('/show/{student}', [StudentController::class, 'show'])->name('show');
+    Route::get('/students/search', [StudentController::class, 'search'])->name('search');
+    Route::get('/student/{id}/show', [StudentController::class, 'show'])
+    ->name('detail');
+    // Route::get('/students/filter', [StudentController::class, 'filtter'])->name('filter');
+
+
+});
 
 
 
@@ -38,11 +45,14 @@ Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->name('class
 
 
 Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers.index');
+Route::delete('/teachers/{id}/search', [TeacherController::class, 'getOne'])->name('teachers.getone');
 Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teachers.create');
 Route::post('/teachers', [TeacherController::class, 'store'])->name('teachers.store');
 Route::get('/teachers/{id}/edit', [TeacherController::class, 'edit'])->name('teachers.edit');
 Route::put('/teachers/{id}', [TeacherController::class, 'update'])->name('teachers.update');
 Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
+ Route::get('/teachers/search', [TeacherController::class, 'search'])->name('teacher.search');
+
 
 
 
@@ -52,7 +62,7 @@ Route::delete('/schedule/{id}', [ScheduleController::class, 'destroy'])
     ->name('schedule.delete');
 Route::get('/schedule/{id}/students', [ScheduleController::class, 'viewClass'])
     ->name('schedule.viewClass');
-    Route::get('/student/{id}/schedules', [ScheduleController::class, 'studentSchedule'])
+    Route::get('/student/{id}/show', [ScheduleController::class, 'studentSchedule'])
     ->name('schedule.student.detail');
 Route::post('/enroll', [EnrollmentController::class, 'store'])->name('enrollment.store');
 

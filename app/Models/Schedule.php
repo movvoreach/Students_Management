@@ -24,15 +24,13 @@ class Schedule extends Model
     {
         return $this->belongsTo(User::class, 'teacher_id');
     }
-// public function teacher()
-// {
-//     return $this->belongsTo(Teacher::class, 'teacher_id');
-// }
+
 
     public function class ()
     {
         return $this->belongsTo(Classroom::class, 'class_id');
     }
+
 
 
 }

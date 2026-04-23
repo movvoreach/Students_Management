@@ -7,7 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Admin Dashboard | LMS')</title>
-    {{-- <link rel="icon" type="image/png" href="{{ asset('backend/dist/img/spilogo.png') }}"> --}}
+    {{--
+    <link rel="icon" type="image/png" href="{{ asset('backend/dist/img/spilogo.png') }}"> --}}
     <link rel="stylesheet" href="{{ asset('backend/plugins/fontawesome-free/css/all.min.css') }}">
     {{-- ✅ Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +16,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Battambang:wght@300;400;600;700&display=swap"
         rel="stylesheet">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     {{-- ✅ Font Awesome (must load BEFORE AdminLTE) --}}
     <link rel="stylesheet" href="{{ asset('backend/plugins/fontawesome-free/css/all.min.css') }}">
 

@@ -1,123 +1,71 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTeacherRequest;
+use App\Http\Requests\UpdateTeacherRequest;
 use App\Models\Teacher;
+use App\Services\TeacherService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User;
 
 class TeacherController extends Controller
 {
+
     // =====================
     // LIST
     // =====================
+
+    protected $teacherService;
+
+    public function __construct(TeacherService $teacherService)
+    {
+        $this->teacherService = $teacherService;
+    }
+
     public function index()
     {
-        $teachers = Teacher::latest()->get();
+        $teachers = $this->teacherService->getAllTeachers();
         return view('Teacher.index', compact('teachers'));
     }
 
-    // =====================
-    // CREATE FORM
-    // =====================
     public function create()
+
     {
-        return view('Teacher.create');
+        return $this->teacherService->create();
     }
 
     // =====================
     // STORE
     // =====================
-    public function store(Request $request)
+    public function store(StoreTeacherRequest $request)
     {
-        $request->validate([
-            'teacher_code' => 'required|unique:teachers',
-            'name'         => 'required',
-            'email'        => 'required|email|unique:teachers',
-            'password'     => 'required|min:6',
-        ]);
+        $this->teacherService->TeacherStore(
+            $request->validated(),
+            $request->file('image')
+        );
 
-        $imagePath = null;
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('teachers', 'public');
-        }
-
-        Teacher::create([
-            'teacher_code' => $request->teacher_code,
-            'name'         => $request->name,
-            'gender'       => $request->gender,
-            'dob'          => $request->dob,
-            'phone'        => $request->phone,
-            'email'        => $request->email,
-            'subject'      => $request->subject,
-            'password'     => Hash::make($request->password),
-            'image'        => $imagePath,
-        ]);
-User::create([
-            'name'     => $request->name,
-            'email'    => $request->email ?? $request->student_code . '@student.com',
-            'password' => Hash::make($request->password),
-            'role'     => 'student',
-        ]);
         return redirect()->route('teachers.index')
-            ->with('success', 'Teacher created successfully');
+            ->with('success', 'Teacher Created successfully');
     }
-
     // =====================
     // EDIT
     // =====================
     public function edit($id)
     {
         $teacher = Teacher::findOrFail($id);
-        return view('Teacher.edit', compact('teacher'));
+        return $this->teacherService->edit($teacher);
     }
 
     // =====================
     // UPDATE
     // =====================
-    public function update(Request $request, $id)
+    public function update(UpdateTeacherRequest $request, $id)
     {
         $teacher = Teacher::findOrFail($id);
-
-        $request->validate([
-            'teacher_code' => 'required|unique:teachers,teacher_code,' . $id,
-            'name'         => 'required',
-            'email'        => 'required|email|unique:teachers,email,' . $id,
-        ]);
-
-        $data = $request->only([
-            'teacher_code',
-            'name',
-            'gender',
-            'dob',
-            'phone',
-            'email',
-            'subject',
-        ]);
-
-        // PASSWORD UPDATE (optional)
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
-
-        // IMAGE UPDATE
-        if ($request->hasFile('image')) {
-
-            // delete old image
-            if ($teacher->image) {
-                Storage::disk('public')->delete($teacher->image);
-            }
-
-            $data['image'] = $request->file('image')->store('teachers', 'public');
-        }
-
-        $teacher->update($data);
-
+        $this->teacherService->update($teacher, $request->validated());
         return redirect()->route('teachers.index')
             ->with('success', 'Teacher updated successfully');
+
     }
 
     // =====================
@@ -126,14 +74,14 @@ User::create([
     public function destroy($id)
     {
         $teacher = Teacher::findOrFail($id);
-
-        // delete image
-        if ($teacher->image) {
-            Storage::disk('public')->delete($teacher->image);
-        }
-
-        $teacher->delete();
-
+        $this->teacherService->delete($teacher);
         return back()->with('success', 'Teacher deleted successfully');
     }
+    public function search(Request $request)
+{
+    $teachers = $this->teacherService->searchTeacher($request);
+
+    return view('Teacher.index', compact('teachers'));
+}
+    
 }

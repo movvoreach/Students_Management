@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class UserService {
 
@@ -17,4 +18,6 @@ class UserService {
             ]);
             return $user;
         }
+
+
 }

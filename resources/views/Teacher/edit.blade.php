@@ -76,7 +76,15 @@
     <div class="card-header">
         <h3 class="card-title">Teacher Information</h3>
     </div>
-
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <form action="{{ route('teachers.update', $teacher->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -130,11 +138,7 @@
                 </div>
 
                 <!-- Password (optional update) -->
-                <div class="col-md-6">
-                    <label>Password <span class="text-muted">(leave blank to keep old)</span></label>
-                    <input type="password" name="password" class="form-control custom-input"
-                        placeholder="New password">
-                </div>
+               
 
                 <!-- Subject -->
                 <div class="col-md-6">

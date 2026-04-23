@@ -63,10 +63,19 @@
     <div class="card-header">
         <h3 class="card-title">Update Student Information</h3>
     </div>
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
-    <form action="{{ route('student.update', $student->id) }}"
-          method="POST"
-          enctype="multipart/form-data">
+<form action="{{ route('student.update', $student->id) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
 
         @csrf
         @method('PUT')

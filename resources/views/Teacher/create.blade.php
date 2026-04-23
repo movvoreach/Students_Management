@@ -91,7 +91,7 @@
                     <!-- Teacher ID -->
                     <div class="col-md-6">
                         <label>Teacher ID <span class="required">*</span></label>
-                        <input type="text" name="teacher_code" class="form-control custom-input" placeholder="TCH-001">
+                      <input type="text" name="teacher_code" class="form-control custom-input" placeholder="TCH-001">
                     </div>
 
                     <!-- Full Name -->

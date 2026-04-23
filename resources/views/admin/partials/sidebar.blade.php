@@ -194,7 +194,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/teachers" class="nav-link">
+                            <a href="{{ route('teachers.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Teacher List</p>
                             </a>
