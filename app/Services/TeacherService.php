@@ -17,7 +17,7 @@ class TeacherService
 
     public function TeacherStore(array $data, $image = null)
     {
-        
+
         $imagePath = null;
 
         if ($image) {
@@ -28,7 +28,7 @@ class TeacherService
         $user = $this->userService->store([
             'name'     => $data['name'],
             'email'    => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => bcrypt($data['password']),
         ]);
 
 
@@ -45,7 +45,7 @@ class TeacherService
             'dob'           => $data['dob'],
             'phone'         => $data['phone'],
             'email'         => $data['email'],
-            'password'      => Hash::make($data['password']),
+            'password' => bcrypt($data['password']),
             'department_id' => $data['department'],
             'image'         => $imagePath,
         ]);
