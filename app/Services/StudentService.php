@@ -14,7 +14,7 @@ class StudentService
     {
         $this->userService = new UserService();
     }
-    public function getAllStudents()
+    public function getAllStudents($filters = [])
     {
         return Student::paginate(6);
     }
@@ -103,36 +103,39 @@ class StudentService
 
         return $student->delete();
     }
-    public function searchStudent($request)
-{
-    $query = Student::query();
+    public function getWithsearchFilters($filters = [])
+    {
+        dd($filters);
+        $query = Student::query();
 
-    // SEARCH
-    if ($request->search) {
-        $query->where(function ($q) use ($request) {
-            $q->where('name', 'like', "%{$request->search}%")
-              ->orWhere('student_code', 'like', "%{$request->search}%")
-              ->orWhere('phone', 'like', "%{$request->search}%")
-              ->orWhere('email', 'like', "%{$request->search}%");
-        });
+        // SEARCH
+        if (isset($filters['search'])) {
+            $s = $filters['search'];
+            $query->where(function ($q) use ($s) {
+                $q->where('name', 'like', "%{$s}%")
+                    ->orWhere('class', 'like', "%{$s}%")
+                    ->orWhere('student_code', 'like', "%{$s}%")
+                    ->orWhere('phone', 'like', "%{$s}%")
+                    ->orWhere('email', 'like', "%{$s}%");
+            });
+        }
+
+
+        // if ($request->class_id) {
+        //     $query->where('class', $request->class_id);
+        // }
+
+        // // GENDER FILTER
+        // if ($request->gender) {
+        //     $query->where('gender', $request->gender);
+        // }
+
+        $perPage = $request->per_page ?? 10;
+
+        return $query->orderBy('id', 'desc')
+            ->paginate($perPage);
+            // ->appends($filters);
     }
-
-
-    if ($request->class_id) {
-        $query->where('class', $request->class_id);
-    }
-
-    // GENDER FILTER
-    if ($request->gender) {
-        $query->where('gender', $request->gender);
-    }
-
-    $perPage = $request->per_page ?? 10;
-
-    return $query->orderBy('id', 'desc')
-        ->paginate($perPage)
-        ->appends($request->all());
-}
     public function showStudentDetail(Student $student)
     {
         $student->load('schedules.class', 'schedules.teacher');

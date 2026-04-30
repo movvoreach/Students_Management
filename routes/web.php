@@ -20,9 +20,7 @@ Route::prefix('student')->name('student.')->group(function () {
     Route::delete('/delete/{student}', [StudentController::class, 'destroy'])->name('destroy');
     Route::get('/show/{student}', [StudentController::class, 'show'])->name('show');
     Route::get('/students/search', [StudentController::class, 'search'])->name('search');
-    Route::get('/student/{id}/show', [StudentController::class, 'show'])
-    ->name('detail');
-    // Route::get('/students/filter', [StudentController::class, 'filtter'])->name('filter');
+   
 
 
 });

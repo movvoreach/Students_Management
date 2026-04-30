@@ -19,16 +19,9 @@ class StudentController extends Controller
         $this->studentService = new StudentService();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $students = $this->studentService->getAllStudents();
-        return view('Student.index', compact('students'));
-    }
-
-    public function search(Request $request)
-    {
-        $students = $this->studentService->searchStudent($request);
-
+        $students = $this->studentService->getWithsearchFilters($request->all());
         return view('Student.index', compact('students'));
     }
 
@@ -54,7 +47,6 @@ class StudentController extends Controller
     {
 
         $this->studentService->update($student, $request->validated());
-
         return redirect()->route('student.index')
             ->with('success', 'Student updated successfully');
     }
@@ -62,33 +54,8 @@ class StudentController extends Controller
     public function destroy(Student $student)
     {
         $this->studentService->delete($student);
-
         return redirect()->route('student.index')
             ->with('success', 'Student deleted successfully');
     }
-    // public function searchStudent($keyword)
-    // {
-    //     $students = $this->studentService->searchStudent($keyword);
-    //      $classes = Classroom::all();
-    //     return view('Student.index', compact('students','classes'));
-    // }
-    public function searchStudent(Request $request)
-{
-    $students = $this->studentService->searchStudent($request);
-    $classes = Classroom::all();
 
-    return view('Student.index', compact('students', 'classes'));
-}
-    public function show(Student $student)
-    {
-        // dd($student);
-        return $this->studentService->showStudentDetail($student);
-    }
-    // public function filtter(Request $request)
-    // {
-    //     $students = $this->studentService->filterStudent($request);
-            //  $classes = Classroom::all();
-
-    //     return view('Student.index', compact('students', 'classes'));
-    // }
 }

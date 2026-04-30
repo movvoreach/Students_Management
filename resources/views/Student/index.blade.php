@@ -36,7 +36,7 @@
         <div class="card shadow-sm">
             <div class="card-body">
 
-                <form method="GET" action="{{ route('student.search') }}">
+                <form method="GET" action="{{ route('student.index') }}">
 
                     <div class="input-group">
 
