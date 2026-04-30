@@ -46,8 +46,8 @@
                         </a>
 
                         {{-- SEARCH INPUT --}}
-                        <input type="text" name="search" value="{{ request('search') }}"
-                            class="form-control form-control-lg" placeholder="Search by name / class / phone / email">
+                        <input type="text" id="searchInput" name="search" value="{{ request('search') }}"
+                            class="form-control" placeholder="Search student / Name / ID /">
 
                         {{-- KEEP PER PAGE --}}
                         <input type="hidden" name="per_page" value="{{ request('per_page') }}">
@@ -59,7 +59,7 @@
 
                     </div>
 
-                {{-- </form> --}}
+                </form>
 
             </div>
         </div>
@@ -86,7 +86,7 @@
                         </button>
                     </a>
                 </div>
-                {{-- <form method="GET" action="{{ route('student.index') }}"> --}}
+                <form method="GET" action="{{ route('student.index') }}">
                     <div class="card shadow-sm">
                         <div class="card-body">
 
@@ -110,7 +110,7 @@
                                 </div>
 
                                 {{-- CLASS --}}
-                                {{-- <div class="col-md-2">
+                                <div class="col-md-2">
                                     <select name="class_id" class="form-control" onchange="this.form.submit()">
                                         <option value="">All Classes</option>
                                         @foreach ($classes as $class)
@@ -120,7 +120,7 @@
                                         </option>
                                         @endforeach
                                     </select>
-                                </div> --}}
+                                </div>
 
                                 {{-- GENDER --}}
                                 <div class="col-md-2">
@@ -136,10 +136,14 @@
                                 {{-- PER PAGE --}}
                                 <div class="col-md-2">
                                     <select name="per_page" class="form-control" onchange="this.form.submit()">
-                                        <option value="5" {{ request('per_page')==5 ? 'selected' : '' }}>5</option>
-                                        <option value="10" {{ request('per_page')==10 ? 'selected' : '' }}>10</option>
-                                        <option value="20" {{ request('per_page')==20 ? 'selected' : '' }}>20</option>
-                                        <option value="50" {{ request('per_page')==50 ? 'selected' : '' }}>50</option>
+                                        <option value="5" {{ request('per_page')==5 ? 'selected' : '' }}>5
+                                        </option>
+                                        <option value="10" {{ request('per_page')==10 ? 'selected' : '' }}>10
+                                        </option>
+                                        <option value="20" {{ request('per_page')==20 ? 'selected' : '' }}>20
+                                        </option>
+                                        <option value="50" {{ request('per_page')==50 ? 'selected' : '' }}>50
+                                        </option>
                                     </select>
                                 </div>
 
@@ -164,23 +168,21 @@
 
             <div class="table-responsive">
 
-                <table class="table table-bordered table-hover align-middle">
-
-                    <thead class="table-light">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead>
                         <tr>
                             <th class="text-center">No</th>
                             <th>Student Info</th>
-                            <th>Class</th>
+                            <th>Department</th>
                             <th>Gender</th>
                             <th>Phone</th>
                             <th>Email</th>
-                            <th class="text-center">Photo</th>
+                            <th class="text-center">Image</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
 
                     <tbody>
-
                         @forelse ($students as $key => $student)
                         <tr>
 
@@ -189,15 +191,26 @@
                                 {{ $students->firstItem() + $key }}
                             </td>
 
-                            {{-- INFO --}}
+                            {{-- STUDENT INFO --}}
                             <td>
                                 <strong>{{ $student->name }}</strong>
                                 <div class="small text-muted">ID: {{ $student->student_code }}</div>
                                 <div class="small text-muted">DOB: {{ $student->dob }}</div>
                             </td>
 
-                            {{-- CLASS --}}
-                            <td>{{ $student->class }}</td>
+                            {{-- CLASSES (ALL) --}}
+                            <td>
+                                {{ $student->department->department_name }}
+                                {{-- @forelse ($student->schedules as $schedule)
+                                -
+                                <span >
+                                    {{ $schedule->class->class_name ?? 'No Class' }}
+                                </span>
+
+                                @empty
+                                <span class="text-muted">No Class</span>
+                                @endforelse --}}
+                            </td>
 
                             {{-- GENDER --}}
                             <td>{{ $student->gender }}</td>
@@ -210,8 +223,10 @@
 
                             {{-- IMAGE --}}
                             <td class="text-center">
-                                <img src="{{ $student->image ? asset('storage/' . $student->image) : asset('storage/students/default.png') }}"
-                                    class="img-thumbnail" style="height:45px;">
+                                <img src="{{ $student->image
+                                ? asset('storage/' . $student->image)
+                                : asset('storage/students/default.png') }}" class="img-thumbnail"
+                                            style="height:45px; width:45px; object-fit:cover;">
                             </td>
 
                             {{-- ACTION --}}
@@ -241,19 +256,20 @@
                             </td>
 
                         </tr>
-
                         @empty
-
                         <tr>
                             <td colspan="8" class="text-center text-muted">
                                 No students found
                             </td>
                         </tr>
                         @endforelse
-
                     </tbody>
-
                 </table>
+
+                {{-- PAGINATION --}}
+                <div class="mt-3">
+                    {{ $students->links() }}
+                </div>
 
             </div>
 
@@ -272,47 +288,28 @@
 
 @push('scripts')
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
 
-    // Loading effect
-    $('.btn-primary').on('click', function () {
-        $('#loading-overlay').addClass('active');
+            // Loading effect
+            $('.btn-primary').on('click', function() {
+                $('#loading-overlay').addClass('active');
 
-        setTimeout(() => {
-            $('#loading-overlay').removeClass('active');
-        }, 800);
-    });
+                setTimeout(() => {
+                    $('#loading-overlay').removeClass('active');
+                }, 800);
+            });
 
-    // Delete confirm (safe delegation)
-    $(document).on('click', '.btn-danger', function (e) {
-        e.preventDefault();
+            let searchValue = "{{ request('search') }}";
 
-        let link = $(this).attr('href');
+            if (searchValue !== "") {
+                let input = document.getElementById("searchInput");
 
-        Swal.fire({
-            title: 'Delete this student?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = link;
+                if (input) {
+                    input.focus();
+                    input.setSelectionRange(input.value.length, input.value.length);
+                }
             }
+
         });
-    });
-
-    // Focus search input after search
-    let searchValue = "{{ request('search') }}";
-
-    if (searchValue !== "") {
-        let input = document.getElementById("searchInput");
-
-        if (input) {
-            input.focus();
-            input.setSelectionRange(input.value.length, input.value.length);
-        }
-    }
-
-});
 </script>
 @endpush

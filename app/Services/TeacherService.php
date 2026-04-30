@@ -12,41 +12,42 @@ class TeacherService
     {
         $this->userService = new UserService();
     }
-    public function getAllTeachers()
-    {
-        return Teacher::paginate(6);
-    }
 
-    public function create()
-    {
-        return view('Teacher.create');
-    }
+
+
     public function TeacherStore(array $data, $image = null)
     {
+        
         $imagePath = null;
 
         if ($image) {
             $imagePath = $image->store('teachers', 'private');
         }
 
+        // Create user
         $user = $this->userService->store([
             'name'     => $data['name'],
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
-            'role'     => 'teacher',
         ]);
 
+
+        if ($user) {
+            $user->assignRole('teacher');
+        }
+
+        // Create teacher profile
         return Teacher::create([
-            'user_id'      => $user->id,
-            'teacher_code' => $data['teacher_code'],
-            'name'         => $data['name'],
-            'gender'       => $data['gender'] ?? null,
-            'dob'          => $data['dob'] ?? null,
-            'phone'        => $data['phone'] ?? null,
-            'email'        => $data['email'],
-            'subject'      => $data['subject'] ?? null,
-            'password'     => Hash::make($data['password']),
-            'image'        => $imagePath,
+            'user_id'       => $user->id,
+            'teacher_code'  => $data['teacher_code'],
+            'name'          => $data['name'],
+            'gender'        => $data['gender'],
+            'dob'           => $data['dob'],
+            'phone'         => $data['phone'],
+            'email'         => $data['email'],
+            'password'      => Hash::make($data['password']),
+            'department_id' => $data['department'],
+            'image'         => $imagePath,
         ]);
     }
     public function edit(Teacher $teacher)
@@ -92,25 +93,42 @@ class TeacherService
 
         return $teacher->delete();
     }
-   public function searchTeacher($request)
-{
-    $query = Teacher::query();
+    public function getWithsearchFilters($filters = [])
+    {
+        $query = Teacher::query();
 
-    if ($request->search) {
-        $query->where(function ($q) use ($request) {
-            $q->where('name', 'like', "%{$request->search}%")
-              ->orWhere('teacher_code', 'like', "%{$request->search}%")
-              ->orWhere('phone', 'like', "%{$request->search}%")
-              ->orWhere('email', 'like', "%{$request->search}%")
-              ->orWhere('subject', 'like', "%{$request->search}%");
-        });
+        // 1. Keyword search (Name, Code, Phone, Email)
+        if (! empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('teacher_code', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if (! empty($filters['department_id'])) {
+            $query->where('department_id', $filters['department_id']);
+        }
+
+        if (! empty($filters['gender'])) {
+            $query->where('gender', $filters['gender']);
+        }
+
+        $perPage = $filters['per_page'] ?? 10;
+
+        return $query->orderBy('id', 'desc')->paginate($perPage);
+    }
+    # TeacherService.php
+    public function showTeacherDetail($id)
+    {
+        $teacher = Teacher::with(['schedules.class', 'schedules.students'])->findOrFail($id);
+
+        return [
+            'teacher'   => $teacher,
+            'schedules' => $teacher->schedules,
+        ];
     }
 
-    $perPage = $request->per_page ?? 10;
-
-    return $query->orderBy('id', 'desc')
-        ->paginate($perPage)
-        ->appends($request->all());
 }
-}
-

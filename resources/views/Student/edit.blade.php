@@ -122,13 +122,13 @@
                 </div>
 
                 {{-- CLASS --}}
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                     <label>Class</label>
                     <input type="text"
                            name="class"
                            value="{{ old('class', $student->class) }}"
                            class="form-control custom-input">
-                </div>
+                </div> --}}
 
                 {{-- PHONE --}}
                 <div class="col-md-6">

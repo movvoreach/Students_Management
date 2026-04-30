@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,10 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::table('classroom', function (Blueprint $table) {
-            $table->unsignedBigInteger('class_id')->nullable()->after('email');
-            $table->foreign('class_id')->references('id')->on('student')->onDelete('cascade');
+        Schema::create('subjects', function (Blueprint $table) {
+            $table->id();
+            $table->string('subject_name');
+            $table->timestamps();
         });
+
     }
 
     /**
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('subjects');
     }
 };

@@ -117,16 +117,20 @@
                         <label>Date of Birth</label>
                         <input type="date" name="dob" class="form-control custom-input">
                     </div>
-                    <!-- Class -->
+                    {{-- Department Name --}}
                     <div class="col-md-6">
-                        <label>Class</label>
-                        <select name="class" class="form-control custom-input">
-                            <option value="">-- Select Class --</option>
-                            <option>Class A</option>
-                            <option>Class B</option>
-                            <option>Class C</option>
+                        <label for="departmentSelect">Department</label>
+                        <select name="department" id="departmentSelect" class="form-control">
+                            <option value="">Choose a department...</option>
+
+                            @foreach ($departments as $department)
+                                <option value="{{ $department->id }}">
+                                    {{ $department->department_name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
+
                     <!-- Phone -->
                     <div class="col-md-6">
                         <label>TelePhone</label>

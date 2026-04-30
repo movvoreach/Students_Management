@@ -147,118 +147,89 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+                 @can('view teacher')
+                    <!-- STUDENT MANAGEMENT -->
+                    <li class="nav-header text-uppercase">Student Management</li>
 
-                <!-- STUDENT MANAGEMENT -->
-                <li class="nav-header text-uppercase">Student Management</li>
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-user-graduate"></i>
+                            <p>
+                                Students
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
 
-                <li class="nav-item has-treeview menu-open">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-user-graduate"></i>
-                        <p>
-                            Students
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Add Student</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/student" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Student List</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                        <ul class="nav nav-treeview">
+                            @can('create student')
+                                <li class="nav-item">
+                                    <a href="" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Add Student</p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('view student')
+                                <li class="nav-item">
+                                    <a href="/student" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Student List</p>
+                                    </a>
+                                </li>
+                             @endcan
+                        </ul>
+                    </li>
+                 @endcan
 
                 <!-- TEACHERS -->
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chalkboard-teacher"></i>
-                        <p>
-                            Teachers
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
+                @can('view teacher')
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                            <p>
+                                Teachers
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
 
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="/teachers/create" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Add Teacher</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('teachers.index') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Teacher List</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
+                        <ul class="nav nav-treeview">
+                            @can('create teacher')
+                            <li class="nav-item">
+                                <a href="/teachers/create" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Add Teacher</p>
+                                </a>
+                            </li>
+                            @endcan
+                             @can('view teacher')
+                            <li class="nav-item">
+                                <a href="{{ route('teachers.index') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Teacher List</p>
+                                </a>
+                            </li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcan
                 <!-- CLASS / COURSE -->
                 <li class="nav-header text-uppercase">Academics</li>
-
+                @can('view schedule')
                 <li class="nav-item">
                     <a href="/schedule" class="nav-link">
                         <i class="nav-icon fas fa-book"></i>
                         <p>Schedule</p>
                     </a>
                 </li>
-
+                @endcan
+                @can('view class')
                 <li class="nav-item">
                     <a href="/classes" class="nav-link">
                         <i class="nav-icon fas fa-school"></i>
                         <p>Classes</p>
                     </a>
                 </li>
-
-                <!-- ATTENDANCE -->
-                <li class="nav-header text-uppercase">Attendance</li>
-
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-calendar-check"></i>
-                        <p>Attendance</p>
-                    </a>
-                </li>
-
-                <!-- REPORTS -->
-                <li class="nav-header text-uppercase">Reports</li>
-
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-line"></i>
-                        <p>Student Report</p>
-                    </a>
-                </li>
-
-                <!-- USERS -->
-                <li class="nav-header text-uppercase">Users</li>
-
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>User Management</p>
-                    </a>
-                </li>
-
-                <!-- SETTINGS -->
-                <li class="nav-header text-uppercase">System</li>
-
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-cogs"></i>
-                        <p>Settings</p>
-                    </a>
-                </li>
-
+                 @endcan
             </ul>
         </nav>
     </div>

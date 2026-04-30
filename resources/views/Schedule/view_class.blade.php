@@ -125,7 +125,8 @@
                     </h3>
 
                     <span class="text-muted">
-                        {{ $schedule->subject ?? 'Course Schedule Management (Ms-Word and Ms-Excel)' }}
+                       {{ $schedule->subjects?->subject_name ?? 'Course Schedule Management (Ms-Word and Ms-Excel)' }}
+
                     </span>
                 </div>
 
@@ -147,9 +148,9 @@
                     {{-- Subject --}}
                     <div class="col-md-3">
                         <div class="p-2">
-                            <small class="text-muted d-block">Subject</small>
+                            <small class="text-muted d-block">Department</small>
                             <div class="fw-semibold text-dark">
-                                {{ $schedule->teacher->subject ?? 'N/A' }}
+                               {{ optional(optional($schedule->teacher)->department)->department_name ?? 'English' }}
                             </div>
                         </div>
                     </div>
@@ -207,7 +208,8 @@
                 <strong>Student List</strong>
 
                 {{-- BUTTON OPEN MODAL --}}
-                <a href="#" class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#enrollModal">
+                <a href="#" id="btnadd" class="btn btn-primary btn-sm float-right" data-toggle="modal"
+                    data-target="#enrollModal">
                     <i class="fas fa-plus"></i>
                 </a>
 
@@ -246,13 +248,21 @@
                                 <td>{{ $student->created_at->format('d/m/Y') }}</td>
 
                                 <td class="text-center">
-                                    <a href="{{ route('schedule.student.detail', $student->id) }}" class="btn btn-info btn-sm">
+                                    <a href="{{ route('schedule.student.detail', $student->id) }}"
+                                        class="btn btn-info btn-sm">
                                         <i class="fas fa-eye"></i>
                                     </a>
 
-                                    <a href="#" class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    <form action="{{ route('schedule.removeStudent', [$schedule->id, $student->id]) }}"
+                                        method="POST" class="d-inline-block"
+                                        onsubmit="return confirm('Are you sure you want to remove this student from this schedule?');">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
 
@@ -283,14 +293,12 @@
     {{-- ===================== --}}
     <div class="modal fade" id="enrollModal" tabindex="-1" role="dialog">
 
-        <div class="modal-dialog modal-lg" role="document"></div
-
+        <div class="modal-dialog modal-lg" role="document">
             <form action="{{ route('enrollment.store') }}" method="POST">
                 @csrf
-
                 {{-- IMPORTANT HIDDEN DATA --}}
-                <input type="hidden" name="class_id" value="{{ $schedule->class->id ?? '' }}">
-                <input type="hidden" name="schedule_id" value="{{ $schedule->id ?? '' }}">
+                {{-- <input type="hidden" name="class_id" value="{{ $schedule->class->id ?? '' }}"> --}}
+                <input id="schedule_id" type="hidden" name="schedule_id" value="{{ $schedule->id ?? '' }}">
 
                 <div class="modal-content">
 
@@ -303,9 +311,9 @@
 
                     <div class="modal-body">
 
-                        <label>Student ID</label>
-                        <input type="text" name="student_id" class="form-control" placeholder="Enter Student ID"
-                            required>
+                        <select class="js-example-basic-single" name="student_id">
+
+                        </select>
 
                     </div>
 
@@ -324,9 +332,52 @@
                 </div>
 
             </form>
-
         </div>
 
     </div>
 
+    </div>
+
 @endsection
+@push('scripts')
+    <script>
+        $(function() {
+
+            $('#btnadd').on('click', function(e) {
+                // console.log('Modal is fully shown');
+                // $('#schedule_id').val('schedule_id');
+                var sche = $('#schedule_id').val();
+                // console.log(sche);
+                $('.js-example-basic-single').empty();
+                $.ajax({
+                    url: "/check-student?" + $.param({
+                        schedule_id: sche
+                    }), // The server endpoint
+                    method: "GET", // Request type
+                    dataType: "json", // Expected data format
+                    success: function(response) {
+                        console.log("done");
+                        var data = response;
+                        console.log(response);
+
+                        // Loop through the array to add options
+                        data.forEach(function(item) {
+                            var newOption = new Option(item.text, item.id, false,
+                                false);
+                            $('.js-example-basic-single').append(newOption).trigger(
+                                'change');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error); // Code to handle request failure
+                    }
+                });
+            });
+
+        });
+        // In your Javascript (external .js resource or <script> tag)
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
+@endpush

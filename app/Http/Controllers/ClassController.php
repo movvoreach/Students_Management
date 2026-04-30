@@ -1,70 +1,57 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreClassRequest;
+use App\Http\Requests\UpdateClassRequest;
 use App\Models\Classroom;
-use Illuminate\Http\Request;
+use App\Models\Department;
+use App\Models\Schedule;
+use App\Services\ClassService;
 
 class ClassController extends Controller
 {
-    // 📋 Show all classes
+    protected $classService;
+
+    public function __construct()
+    {
+        // Instantiating the class directly
+        $this->classService = new ClassService();
+    }
+
+    // Show all classes
     public function index()
     {
-        $classes = Classroom::latest()->paginate(10);
+        $classes = $this->classService->getWithsearchFilters(request()->all());
         return view('Class.index', compact('classes'));
     }
 
-    // ➕ Show create form
+    // Show create form
     public function create()
     {
         return view('Class.create');
     }
 
-    // 💾 Store new class
-    public function store(Request $request)
+    // Store new class
+    public function store(StoreClassRequest $request)
     {
-        $request->validate([
-            'class_name' => 'required|string|max:255',
-            'table' => 'required|string|max:255',
-            'status' => 'required|in:active,inactive',
-        ]);
-
-        Classroom::create([
-            'class_name' => $request->class_name,
-            'table' => $request->table,
-            'status' => $request->status,
-        ]);
-
+        $this->classService->store($request->validated());
         return redirect()->route('classes.index')
             ->with('success', 'Class created successfully!');
     }
 
-    // ✏️ Show edit form
+    //  Show edit form
     public function edit($id)
     {
         $class = Classroom::findOrFail($id);
         return view('Class.edit', compact('class'));
     }
 
-    // 🔄 Update class
-    public function update(Request $request, $id)
+    // Update class
+    public function update(UpdateClassRequest $request, $id)
     {
-        $class = Classroom::findOrFail($id);
+        $this->classService->updateStudents(Classroom::findOrFail($id), $request->validated());
 
-        $request->validate([
-            'class_name' => 'required|string|max:255',
-            'table' => 'required|string|max:255',
-            'status' => 'required|in:active,inactive',
-        ]);
-
-        $class->update([
-            'class_name' => $request->class_name,
-            'table' => $request->table,
-            'status' => $request->status,
-        ]);
-
-        return redirect()->route('classes.index')
-            ->with('success', 'Class updated successfully!');
+        return redirect()->route('classes.index')->with('success', 'Class updated successfully!');
     }
 
     public function destroy($id)
@@ -76,10 +63,17 @@ class ClassController extends Controller
             ->with('success', 'Class deleted successfully!');
     }
 
-    // 👁️ Show single class (optional)
+    // Show single class (optional)
     public function show($id)
     {
         $class = Classroom::findOrFail($id);
-        return view('Class.show', compact('class'));
+
+       $scheduleInClass = Classroom::join('schedules', 'classes.id', '=', 'schedules.class_id')
+        ->where('classes.id', $id)->get();
+
+        return view('Class.show', compact('class' ,'scheduleInClass'));
     }
+
+
+
 }

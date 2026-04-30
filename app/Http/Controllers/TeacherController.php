@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTeacherRequest;
 use App\Http\Requests\UpdateTeacherRequest;
+use App\Models\Department;
 use App\Models\Teacher;
 use App\Services\TeacherService;
 use Illuminate\Http\Request;
@@ -22,16 +23,19 @@ class TeacherController extends Controller
         $this->teacherService = $teacherService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $teachers = $this->teacherService->getAllTeachers();
-        return view('Teacher.index', compact('teachers'));
+        // dd($request->all());
+
+        $teachers = $this->teacherService->getWithsearchFilters($request->all());
+        return view('Teacher.index', compact('teachers',));
     }
 
     public function create()
 
     {
-        return $this->teacherService->create();
+        $departments = Department::all();
+        return view('Teacher.create',compact('departments'));
     }
 
     // =====================
@@ -39,6 +43,7 @@ class TeacherController extends Controller
     // =====================
     public function store(StoreTeacherRequest $request)
     {
+        // dd($request->all())
         $this->teacherService->TeacherStore(
             $request->validated(),
             $request->file('image')
@@ -77,11 +82,21 @@ class TeacherController extends Controller
         $this->teacherService->delete($teacher);
         return back()->with('success', 'Teacher deleted successfully');
     }
-    public function search(Request $request)
-{
-    $teachers = $this->teacherService->searchTeacher($request);
+        public function search(Request $request)
+    {
+        $teachers = $this->teacherService->getWithsearchFilters($request);
 
-    return view('Teacher.index', compact('teachers'));
-}
-    
+        return view('Teacher.index', compact('teachers'));
+    }
+    public function show($id)
+    {
+        $data = $this->teacherService->showTeacherDetail($id);
+
+        return view('Teacher.show', [
+            'teacher'   => $data['teacher'],
+            'schedules' => $data['schedules'],
+        ]);
+    }
+
+
 }

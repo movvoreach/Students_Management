@@ -29,7 +29,7 @@ class UpdateTeacherRequest extends FormRequest
             'dob'          => 'required|date',
             'phone'        => 'required|string|max:20',
             'email'        => 'required|email',
-            'subject'      => 'required|string|max:100',
+            'department'      => 'required|string|max:100',
             'password'     => 'nullable|string|min:6',
             'image'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];

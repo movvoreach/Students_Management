@@ -5,32 +5,47 @@ use Illuminate\Database\Eloquent\Model;
 
 class Schedule extends Model
 {
-    protected $fillable = ['teacher_id', 'class_id', 'day', 'start_time', 'end_time'];
+    protected $fillable = ['subject_id', 'department_id', 'teacher_id', 'class_id', 'day', 'start_time', 'end_time'];
 
-    // public function teacher()
-    // {
-    //     return $this->belongsTo(Teacher::class);
-    // }
-
-    // public function class()
-    // {
-    //     return $this->belongsTo(Classroom::class);
-    // }
     public function students()
     {
-       return $this->belongsToMany(Student::class, 'schedule_students', 'schedule_id', 'student_id');
+        return $this->belongsToMany(Student::class, 'schedule_students', 'schedule_id', 'student_id');
     }
     public function teacher()
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->belongsTo(Teacher::class, 'teacher_id');
     }
-
 
     public function class ()
     {
         return $this->belongsTo(Classroom::class, 'class_id');
     }
 
+    public function department()
+    {
+        // Assumes 'department_id' is in the teachers table
+        return $this->belongsTo(Department::class);
+    }
+    public function schedules() {
+    return $this->hasMany(Schedule::class);
+    }
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class, 'subject_id');
+    }
+        public function scopeForUser($query, $user)
+    {
+        if ($user->hasRole('teacher')) {
+            $teacher = Teacher::where('user_id', $user->id)->first();
+            return $query->where('teacher_id', $teacher->id);
+        }
 
+        if ($user->hasRole('student')) {
+            $student = Student::where('user_id', $user->id)->first();
+            return $query->where('department_id', $student->department_id);
+        }
+
+        return $query;
+    }
 
 }

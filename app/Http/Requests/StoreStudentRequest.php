@@ -29,7 +29,7 @@ class StoreStudentRequest extends FormRequest
             'password'     => 'required|min:6',
             'gender'     => 'required',
             'dob'        => 'required|date',
-            'class'      => 'required',
+            'department'      => 'required|string|max:255',
             'phone'      => 'required',
             'image'      => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];

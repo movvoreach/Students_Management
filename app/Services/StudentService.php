@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Models\Student;
@@ -14,10 +13,10 @@ class StudentService
     {
         $this->userService = new UserService();
     }
-    public function getAllStudents($filters = [])
-    {
-        return Student::paginate(6);
-    }
+    // public function getAllStudents($filters = [])
+    // {
+    //     return Student::paginate(6);
+    // }
     public function create()
     {
         return view('Student.create');
@@ -33,17 +32,21 @@ class StudentService
         // Create user
         $user = $this->userService->store($data);
 
+        if ($user) {
+            $user->assignRole('student');
+        }
+
         // Create student
         $student = Student::create([
-            'user_id'      => $user->id,
-            'student_code' => $data['student_code'],
-            'name'         => $data['name'],
-            'gender'       => $data['gender'],
-            'dob'          => $data['dob'],
-            'class'        => $data['class'],
-            'phone'        => $data['phone'],
-            'email'        => $data['email'],
-            'image'        => $imagePath,
+            'user_id'       => $user->id,
+            'department_id' => $data['department'],
+            'student_code'  => $data['student_code'],
+            'name'          => $data['name'],
+            'gender'        => $data['gender'],
+            'dob'           => $data['dob'],
+            'phone'         => $data['phone'],
+            'email'         => $data['email'],
+            'image'         => $imagePath,
         ]);
 
         return $student;
@@ -70,7 +73,6 @@ class StudentService
             'name'         => $data['name'],
             'gender'       => $data['gender'],
             'dob'          => $data['dob'],
-            'class'        => $data['class'],
             'phone'        => $data['phone'],
             'email'        => $data['email'],
             'image'        => $imagePath,
@@ -105,7 +107,7 @@ class StudentService
     }
     public function getWithsearchFilters($filters = [])
     {
-        dd($filters);
+        // dd($filters);
         $query = Student::query();
 
         // SEARCH
@@ -113,28 +115,26 @@ class StudentService
             $s = $filters['search'];
             $query->where(function ($q) use ($s) {
                 $q->where('name', 'like', "%{$s}%")
-                    ->orWhere('class', 'like', "%{$s}%")
+                    ->orWhere('id', 'like', "%{$s}%")
                     ->orWhere('student_code', 'like', "%{$s}%")
                     ->orWhere('phone', 'like', "%{$s}%")
                     ->orWhere('email', 'like', "%{$s}%");
             });
         }
 
+        if (! empty($filters['class_id'])) {
+            $query->whereHas('enrollments', function ($q) use ($filters) {
+                $q->where('class_id', $filters['class_id']);
+            });
+        }
 
-        // if ($request->class_id) {
-        //     $query->where('class', $request->class_id);
-        // }
+        if (isset($filters['gender'])) {
+            $query->where('gender', $filters['gender']);
+        }
 
-        // // GENDER FILTER
-        // if ($request->gender) {
-        //     $query->where('gender', $request->gender);
-        // }
+        $perPage = $filters['per_page'] ?? 10;
 
-        $perPage = $request->per_page ?? 10;
-
-        return $query->orderBy('id', 'desc')
-            ->paginate($perPage);
-            // ->appends($filters);
+        return $query->orderBy('id', 'desc')->paginate($perPage);
     }
     public function showStudentDetail(Student $student)
     {
@@ -144,24 +144,4 @@ class StudentService
 
         return view('Student.show', compact('student', 'schedules'));
     }
-    // public function filterStudent($request)
-    // {
-    //     $query = Student::query();
-
-    //     if ($request->class_id) {
-    //         $query->whereHas('classes', function ($q) use ($request) {
-    //             $q->where('classes.id', $request->class_id);
-    //         });
-    //     }
-
-    //     if ($request->gender) {
-    //         $query->where('gender', $request->gender);
-    //     }
-
-    //     $perPage = $request->per_page ?? 10;
-
-    //     return $query->orderBy('id', 'desc')
-    //         ->paginate($perPage)
-    //         ->appends($request->all());
-    // }
 }

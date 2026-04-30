@@ -1,34 +1,22 @@
 <?php
-
 namespace App\Http\Controllers;
-use App\Models\Enrollment;
-use App\Models\ScheduleStudent;
-use Illuminate\Http\Request;
+
+use App\Http\Requests\StoreEnrollmentRequest;
+use App\Services\EnrollmentService;
 
 class EnrollmentController extends Controller
 {
-    //
-    public function store(Request $request)
-{
-    $request->validate([
-        'student_id' => 'required|exists:students,id',
-        'class_id'   => 'required',
-        'schedule_id'=> 'required',
-        'schedule_id' => 'required|exists:schedules,id',
-    ]);
+    protected $enrollmentService;
 
+    public function __construct()
+    {
+        $this->enrollmentService = new EnrollmentService();
+    }
 
-    Enrollment::create([
-        'student_id'  => $request->student_id,
-        'class_id'    => $request->class_id,
-        'schedule_id' => $request->schedule_id,
-    ]);
-    ScheduleStudent::create([
-        'student_id'  => $request->student_id,
-        'schedule_id' => $request->schedule_id,
-    ]);
+    public function store(StoreEnrollmentRequest $request)
+    {
+        $this->enrollmentService->enrollStudent($request->validated());
 
-    return back()->with('success', 'Student enrolled successfully');
+        return redirect()->back()->with('success', 'Student enrolled successfully');
+    }
 }
-}
-

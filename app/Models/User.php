@@ -46,8 +46,29 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-  public function teacher()
-{
-    return $this->belongsTo(User::class, 'teacher_id');
-}
+    /**
+ * Get the teacher associated with this record.
+ */
+    public function teacher()
+    {
+
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the department associated with this record.
+     */
+    public function department()
+    {
+
+        return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * Get the student associated with this record.
+     */
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
 }

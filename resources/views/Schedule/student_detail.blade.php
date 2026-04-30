@@ -76,7 +76,7 @@
                             <div class="p-2">
                                 <small class="text-muted d-block">Class</small>
                                 <div class="fw-semibold text-dark">
-                                    {{ $student->class ?? 'N/A' }}
+                                    {{ $student->class ?? 'Class A' }}
                                 </div>
                             </div>
                         </div>
@@ -123,9 +123,9 @@
                     <strong>Class List</strong>
 
                     {{-- BUTTON (optional create class / enroll) --}}
-                    <a href="#" class="btn btn-primary btn-sm float-right">
+                    {{-- <a href="#" class="btn btn-primary btn-sm float-right">
                         <i class="fas fa-plus"></i>
-                    </a>
+                    </a> --}}
 
                 </div>
 
@@ -170,7 +170,7 @@
 
                                     {{-- SUBJECT --}}
                                     <td>
-                                        {{ $schedule->teacher->subject ?? 'N/A' }}
+                                        {{ $schedule->teacher->subject ?? 'English' }}
                                     </td>
 
                                     {{-- SCHEDULE TIME --}}
@@ -194,9 +194,9 @@
                                             <i class="fas fa-eye"></i>
                                         </a>
 
-                                        <a href="#" class="btn btn-danger btn-sm">
+                                        {{-- <a href="#" class="btn btn-danger btn-sm">
                                             <i class="fas fa-trash"></i>
-                                        </a>
+                                        </a> --}}
 
                                     </td>
 
