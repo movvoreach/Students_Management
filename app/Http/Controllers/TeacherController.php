@@ -7,7 +7,6 @@ use App\Models\Department;
 use App\Models\Teacher;
 use App\Services\TeacherService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class TeacherController extends Controller
 {
@@ -28,14 +27,13 @@ class TeacherController extends Controller
         // dd($request->all());
 
         $teachers = $this->teacherService->getWithsearchFilters($request->all());
-        return view('Teacher.index', compact('teachers',));
+        return view('Teacher.index', compact('teachers', ));
     }
 
     public function create()
-
     {
         $departments = Department::all();
-        return view('Teacher.create',compact('departments'));
+        return view('Teacher.create', compact('departments'));
     }
 
     // =====================
@@ -57,8 +55,10 @@ class TeacherController extends Controller
     // =====================
     public function edit($id)
     {
-        $teacher = Teacher::findOrFail($id);
-        return $this->teacherService->edit($teacher);
+        $teacher     = Teacher::findOrFail($id);
+        $departments = Department::all();
+
+        return view('Teacher.edit', compact('teacher', 'departments'));
     }
 
     // =====================
@@ -82,7 +82,7 @@ class TeacherController extends Controller
         $this->teacherService->delete($teacher);
         return back()->with('success', 'Teacher deleted successfully');
     }
-        public function search(Request $request)
+    public function search(Request $request)
     {
         $teachers = $this->teacherService->getWithsearchFilters($request);
 
@@ -97,6 +97,5 @@ class TeacherController extends Controller
             'schedules' => $data['schedules'],
         ]);
     }
-
 
 }

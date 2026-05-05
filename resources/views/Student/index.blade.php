@@ -235,6 +235,7 @@
                                 <a href="{{ route('schedule.student.detail', $student->id) }}"
                                     class="btn btn-info btn-sm">
                                     <i class="fas fa-eye"></i>
+
                                 </a>
 
                                 <a href="{{ route('student.edit', $student->id) }}" class="btn btn-primary btn-sm">

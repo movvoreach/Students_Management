@@ -170,7 +170,7 @@
 
                                     {{-- SUBJECT --}}
                                     <td>
-                                        {{ $schedule->teacher->subject ?? 'English' }}
+                                        {{ $schedule->subject->subject_name ?? 'English' }}
                                     </td>
 
                                     {{-- SCHEDULE TIME --}}

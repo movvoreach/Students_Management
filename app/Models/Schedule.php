@@ -33,19 +33,19 @@ class Schedule extends Model
     {
         return $this->belongsTo(Subject::class, 'subject_id');
     }
-        public function scopeForUser($query, $user)
-    {
-        if ($user->hasRole('teacher')) {
-            $teacher = Teacher::where('user_id', $user->id)->first();
-            return $query->where('teacher_id', $teacher->id);
-        }
+    // public function scopeForUser($query, $user)
+    // {
+    //     if ($user->hasRole('teacher')) {
+    //         $teacher = Teacher::where('user_id', $user->id)->first();
+    //         return $query->where('teacher_id', $teacher->id);
+    //     }
 
-        if ($user->hasRole('student')) {
-            $student = Student::where('user_id', $user->id)->first();
-            return $query->where('department_id', $student->department_id);
-        }
+    //     if ($user->hasRole('student')) {
+    //         $student = Student::where('user_id', $user->id)->first();
+    //         return $query->where('department_id', $student->department_id);
+    //     }
 
-        return $query;
-    }
+    //     return $query;
+    // }
 
 }

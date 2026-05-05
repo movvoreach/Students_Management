@@ -174,7 +174,7 @@
 
                                 {{-- SUBJECT --}}
                                 <td>
-                                    {{ $teacher->subject ?? 'N/A' }}
+                                    {{ $schedule->subject->subject_name ?? 'N/A' }}
                                 </td>
 
                                 {{-- SCHEDULE --}}

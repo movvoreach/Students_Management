@@ -19,6 +19,7 @@ class ClassService
     }
     public function updateStudents($Student, array $data)
     {
+        // dd($Student);
         $Student->update([
             'class_name' => $data['class_name'],
             'table'      => $data['table'],

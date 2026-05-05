@@ -50,9 +50,8 @@
             @endif
 
 
-            <!-- STATS (KEEP SAME OR OPTIONAL) -->
-            <div class="row">
-
+            <!-- STATS -->
+            {{-- <div class="row">
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
@@ -100,160 +99,350 @@
                         </div>
                     </div>
                 </div>
-
-            </div>
+            </div> --}}
 
             <!-- TOP ACTION -->
-            <div class="row mb-3">
-                <div class="col-md-8">
-                    <input type="text" class="form-control" placeholder="Search Schedule...">
-                </div>
+            <!-- TOP ACTION -->
+            <!-- TOP ACTION -->
 
-                <div class="col-md-2">
-                    <button class="btn btn-secondary w-100">
-                        Refresh
-                    </button>
-                </div>
-
-                <div class="col-md-2">
-                    <button class="btn btn-primary w-100" data-toggle="modal" data-target="#scheduleContainer">
-                        Add Schedule +
-                    </button>
-                </div>
-            </div>
-            @can('view schedule')
-            <!-- CLASS CARDS GRID -->
-            <div class="row">
-
-                @foreach ($schedules as $schedule)
-                    <div class="col-md-6">
-                        <div class="card shadow-sm border-0">
-
-                            <div class="card-body">
-
-                                <!-- HEADER -->
-                                <div class="d-flex justify-content-between align-items-start">
-
-                                    <div>
-                                        <h5 class="mb-1 font-weight-bold">
-                                            <i class="fas fa-home text-primary"></i>
-                                            {{ $schedule->class->class_name ?? 'N/A' }}
-                                        </h5>
-
-                                        <small class="text-muted">
-                                            Class ID:
-                                            <span class="badge badge-primary">
-                                                {{ $schedule->class->id ?? '-' }}
-                                            </span>
-                                        </small>
-                                    </div>
-
-                                    <!-- DROPDOWN -->
-                                    <div class="dropdown">
-                                        <a href="#" data-toggle="dropdown" class="text-dark">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </a>
-
-                                        <div class="dropdown-menu dropdown-menu-right">
-
-                                            <a class="btnadd" class="dropdown-item" href="#" data-toggle="modal"
-                                                data-target="#enrollModal{{ $schedule->id }}">
-                                                <i class="fas fa-user-plus text-primary"></i> Enroll Student
-                                            </a>
-
-                                            <a class="dropdown-item" href="#" data-toggle="modal"
-                                                data-target="#qrModal{{ $schedule->id }}">
-                                                <i class="fas fa-qrcode text-success"></i> Show QR Code
-                                            </a>
-
-                                            <div class="dropdown-divider"></div>
-
-                                            <form action="{{ route('schedule.delete', $schedule->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button type="submit" class="dropdown-item text-danger"
-                                                    onclick="return confirm('Do you want to delete this schedule?')">
-                                                    <i class="fas fa-trash"></i> Delete Class
-                                                </button>
-                                            </form>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <hr>
-
-                                <!-- CLASS INFO -->
-                                <div class="row">
-
-                                    <div class="col-6 mb-2">
-                                        <small class="text-muted">Teacher</small><br>
-                                        <b>{{ $schedule->teacher->name ?? 'N/A' }}</b>
-                                    </div>
-
-                                    <div class="col-6 mb-2">
-                                        <small class="text-muted">Status</small><br>
-                                        <span class="badge badge-success">
-                                            Active
-                                        </span>
-                                    </div>
-
-                                    <div class="col-6 mb-2">
-                                        <small class="text-muted">Day</small><br>
-                                        <b>{{ $schedule->day }}</b>
-                                    </div>
-
-                                    <div class="col-6 mb-2">
-                                        <small class="text-muted">Time</small><br>
-                                        <span class="text-success font-weight-bold">
-                                            {{ $schedule->start_time }} - {{ $schedule->end_time }}
-                                        </span>
-                                    </div>
-
-                                    <div class="col-6 mb-2">
-                                        <small class="text-muted">Department</small><br>
-                                        <b>{{ optional(optional($schedule->teacher)->department)->department_name ?? 'English' }}</b>
-                                    </div>
-
-                                    <div class="col-6 mb-2">
-                                        <small class="text-muted">Students</small><br>
-
-                                        <b>
-                                            {{ $schedule->students_count }}
-                                            /
-                                            {{ $schedule->class->table ?? 'N/A' }}
-                                        </b>
-                                    </div>
-
-                                </div>
-
-                                <hr>
-
-                                <a href="{{ route('schedule.viewClass', $schedule->id) }}"
-                                    class="btn btn-outline-primary btn-block">
-                                    View Class
-                                </a>
-
-                            </div>
-                        </div>
+            <!-- TOP ACTION with combined filter form -->
+            <form method="GET" action="{{ route('schedule.index') }}" class="mb-3">
+                <div class="row">
+                    <div class="col-md-3 mb-2"> {{-- Search input --}}
+                        <input type="text" name="search" class="form-control" placeholder="Search Schedule..."
+                            value="{{ request('search') }}">
                     </div>
-                @endforeach
 
+                    @role('admin')
+                        <div class="col-md-2 mb-2"> {{-- Department filter --}}
+                            <select name="department_id" class="form-control" onchange="this.form.submit()">
+                                <option value="">All Departments</option>
+                                @foreach ($departments as $dept)
+                                    <option value="{{ $dept->id }}"
+                                        {{ request('department_id') == $dept->id ? 'selected' : '' }}>
+                                        {{ $dept->department_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- <div class="col-md-2 mb-2">
+                            <select name="teacher_id" class="form-control" onchange="this.form.submit()">
+                                <option value="">All Teachers</option>
+                                @foreach ($teachers as $teacher)
+                                    <option value="{{ $teacher->id }}"
+                                        {{ request('teacher_id') == $teacher->id ? 'selected' : '' }}>
+                                        {{ $teacher->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+
+                        {{-- <div class="col-md-2 mb-2">
+                            <select name="day" class="form-control" onchange="this.form.submit()">
+                                <option value="">All Days</option>
+                                @foreach (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $dayOption)
+                                    <option value="{{ $dayOption }}" {{ request('day') == $dayOption ? 'selected' : '' }}>
+                                        {{ $dayOption }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+                    @endrole
+
+                    <div class="col-md-1 mb-2"> {{-- Refresh/Submit button --}}
+                        {{-- This button now effectively submits the form, no need for separate refresh --}}
+                        <button type="submit" class="btn btn-secondary w-100">
+                            Filter
+                        </button>
+                    </div>
+
+                    @hasanyrole('admin|teacher')
+                        <div class="col-md-2 mb-2"> {{-- Add Schedule button --}}
+                            <button type="button" class="btn btn-primary w-100" data-toggle="modal"
+                                data-target="#scheduleContainer">
+                                Add Schedule +
+                            </button>
+                        </div>
+                    @endhasanyrole
+                </div>
+            </form>
+
+
+
+
+        </div>
+
+        @can('view schedule')
+
+            <div class="row">
+                <div class="col-12">
+
+                    @if (auth()->user()->hasRole('teacher'))
+                        <h5 class="mb-3">My Schedule</h5>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered text-center align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Day</th>
+                                        <th>Time</th>
+                                        <th>Subject</th>
+                                        <th>Class</th>
+                                        {{-- <th>Actions</th> --}}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($schedules as $schedule)
+                                        <tr>
+                                            <td>{{ $schedule->day }}</td>
+                                            <td>{{ $schedule->start_time }} - {{ $schedule->end_time }}</td>
+                                            <td>{{ $schedule->subject->subject_name ?? '-' }}</td>
+                                            <td>Room {{ $schedule->class->class_name ?? '-' }}</td>
+                                            {{-- <td>
+                                                    @can('view schedule')
+                                                        <a href="{{ route('schedule.viewClass', $schedule->id) }}"
+                                                            class="btn btn-outline-primary">
+                                                            <i class="fa-solid fa-plus"></i>
+                                                        </a>
+                                                    @endcan
+                                                </td> --}}
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="4">No schedule found</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    @elseif (auth()->user()->hasRole('student'))
+                        @php
+                            $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                        @endphp
+
+                        <h5 class="mb-3">Class Timetable</h5>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered text-center align-middle">
+
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Time</th>
+                                        @foreach ($days as $day)
+                                            <th>{{ $day }}</th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach ($time as $time)
+                                        <tr>
+
+                                            {{-- TIME --}}
+                                            <td>
+                                                {{ \Carbon\Carbon::parse($time->start_time)->format('h:i A') }}
+                                                -
+                                                {{ \Carbon\Carbon::parse($time->end_time)->format('h:i A') }}
+                                            </td>
+
+                                            {{-- DAYS  --}}
+                                            @foreach ($days as $day)
+                                                @php
+                                                    $items = $schedules
+                                                        ->where('day', $day)
+                                                        ->where('start_time', $time->start_time);
+                                                @endphp
+
+                                                <td style="min-width:150px">
+
+                                                    @forelse ($items as $schedule)
+                                                        <div class="p-2 mb-1  bg-light">
+
+                                                            <strong>
+                                                                {{ $schedule->subject->subject_name ?? '-' }}
+                                                            </strong><br>
+
+                                                            <small>
+                                                                {{ $schedule->teacher->name ?? '-' }}
+                                                            </small><br>
+
+                                                            <span class="text-muted">
+                                                                Room {{ $schedule->class->class_name ?? '-' }}
+                                                            </span>
+
+                                                        </div>
+                                                    @empty
+                                                        <span class="text-muted">-</span>
+                                                    @endforelse
+
+                                                </td>
+                                            @endforeach
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+
+                            </table>
+                        </div>
+                    @else
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 fw-bold text-primary">
+                                    <i class="fas fa-calendar-alt me-2"></i> Schedule List
+                                </h5>
+                            </div>
+
+                            <div id="scheduleTable">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered align-middle text-center">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Day</th>
+                                                <th>Department</th>
+                                                <th>Subject , Room</th>
+                                                <th>Teacher</th>
+                                                <th>Time</th>
+                                                <th width="120">Actions</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @forelse ($schedules as $schedule)
+                                                <tr>
+
+                                                    <!-- Day -->
+                                                    <td>
+                                                        <span class="badge bg-light text-dark">
+                                                            {{ $schedule->day }}
+                                                        </span>
+                                                    </td>
+
+                                                    <!-- Department -->
+                                                    <td>
+                                                        <span class="fw-semibold text-secondary">
+                                                            {{ $schedule->teacher->department->department_name ?? 'N/A' }}
+                                                        </span>
+                                                    </td>
+
+                                                    <!-- Subject + Teacher Inline -->
+                                                    <td>
+                                                        <div class="fw-semibold text-primary">
+                                                            {{ $schedule->subject->subject_name ?? 'N/A' }} <small
+                                                                class="text-muted">
+                                                                ({{ $schedule->class->class_name ?? 'N/A' }})
+                                                            </small>
+                                                        </div>
+
+                                                    </td>
+
+                                                    <!-- Teacher (separate column optional) -->
+                                                    <td>
+                                                        <span class="fw-semibold">
+                                                            {{ $schedule->teacher->name ?? 'N/A' }}
+                                                        </span>
+                                                    </td>
+
+                                                    <!-- Time -->
+                                                    <td>
+                                                        <span class="badge bg-success">
+                                                            {{ \Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }}
+                                                            -
+                                                            {{ \Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
+                                                        </span>
+                                                    </td>
+
+                                                    <!-- Actions -->
+                                                    <td>
+                                                        @can('view schedule')
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-sm btn-outline-primary dropdown-toggle"
+                                                                    data-bs-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+
+                                                                <ul class="dropdown-menu shadow border-0">
+
+                                                                    <li>
+                                                                        <a class="dropdown-item"
+                                                                            href="{{ route('schedule.viewClass', $schedule->id) }}">
+                                                                            <i class="fa fa-eye text-info me-2"></i> View
+                                                                        </a>
+                                                                    </li>
+
+                                                                    @can('edit schedule')
+                                                                        <li>
+                                                                            <a class="dropdown-item btnedit" href="#"
+                                                                                data-id="{{ $schedule->id }}">
+                                                                                <i class="fa fa-edit text-warning me-2"></i> Edit
+                                                                            </a>
+                                                                        </li>
+                                                                    @endcan
+
+                                                                    @can('delete schedule')
+                                                                        <li>
+                                                                            <hr class="dropdown-divider">
+                                                                        </li>
+
+                                                                        <li>
+                                                                            <form
+                                                                                action="{{ route('schedule.delete', $schedule->id) }}"
+                                                                                method="POST">
+                                                                                @csrf
+                                                                                @method('DELETE')
+
+                                                                                <button type="submit" class="dropdown-item text-danger"
+                                                                                    onclick="return confirm('Delete this schedule?')">
+                                                                                    <i class="fas fa-trash me-2"></i> Delete
+                                                                                </button>
+                                                                            </form>
+                                                                        </li>
+                                                                    @endcan
+
+                                                                </ul>
+                                                            </div>
+                                                        @endcan
+                                                    </td>
+
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="6" class="text-center py-4 text-muted">
+                                                        <i class="fas fa-folder-open fa-2x mb-2"></i><br>
+                                                        No schedules found
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination -->
+                                <div class="d-flex justify-content-between align-items-center mt-3 px-2">
+                                    <small class="text-muted">
+                                        Showing {{ $schedules->firstItem() ?? 0 }} to {{ $schedules->lastItem() ?? 0 }}
+                                        of {{ $schedules->total() }} entries
+                                    </small>
+
+                                    {!! $schedules->links() !!}
+                                </div>
+                            </div>
+
+                        </div>
+                    @endif
+
+                </div>
             </div>
-            @endcan
-            <!-- CREATE SCHEDULE MODAL -->
+
+        @endcan
+        <!-- CREATE SCHEDULE MODAL -->
+        @can('create schedule')
             <div class="modal fade" id="scheduleContainer" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
-
                     <form action="{{ route('schedule.store') }}" method="POST">
                         @csrf
 
                         <div class="modal-content">
-
-                            <!-- HEADER -->
                             <div class="modal-header bg-primary text-white">
                                 <h5 class="modal-title">Create Schedule</h5>
                                 <button type="button" class="close text-white" data-dismiss="modal">
@@ -261,24 +450,19 @@
                                 </button>
                             </div>
 
-                            <!-- BODY -->
                             <div class="modal-body">
                                 <div class="row">
-
-                                    <!-- DEPARTMENT -->
                                     <div class="col-md-6 mb-3">
                                         <label>Department</label>
                                         <select name="department_id" id="department_id" class="form-control">
                                             <option value="">Choose Department</option>
                                             @foreach ($departments as $department)
-                                                <option value="{{ $department->id }}">
-                                                    {{ $department->department_name }}
+                                                <option value="{{ $department->id }}">{{ $department->department_name }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
 
-                                    <!-- SUBJECT -->
                                     <div class="col-md-6 mb-3">
                                         <label>Subject</label>
                                         <select name="subject_id" id="subject" class="form-control" required>
@@ -286,29 +470,23 @@
                                         </select>
                                     </div>
 
-                                    <!-- TEACHER -->
                                     <div class="col-md-6 mb-3">
                                         <label>Teacher</label>
                                         <select name="teacher_id" id="teacher" class="form-control" required>
                                             <option value="">-- Select Teacher --</option>
-
                                         </select>
                                     </div>
 
-                                    <!-- CLASS -->
                                     <div class="col-md-6 mb-3">
                                         <label>Class</label>
                                         <select name="class_id" id="classes" class="form-control" required>
                                             <option value="">-- Select Class --</option>
                                             @foreach ($classes as $class)
-                                                <option value="{{ $class->id }}">
-                                                    {{ $class->class_name }}
-                                                </option>
+                                                <option value="{{ $class->id }}">{{ $class->class_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
 
-                                    <!-- DAY -->
                                     <div class="col-md-6 mb-3">
                                         <label>Day</label>
                                         <select name="day" class="form-control" required>
@@ -323,190 +501,258 @@
                                         </select>
                                     </div>
 
-                                    <!-- START TIME -->
                                     <div class="col-md-3 mb-3">
                                         <label>Start Time</label>
-                                        <input type="time" name="start_time" class="form-control" required>
+                                        <input type="time" name="start_time" class="form-control" step="900">
                                     </div>
 
-                                    <!-- END TIME -->
                                     <div class="col-md-3 mb-3">
                                         <label>End Time</label>
-                                        <input type="time" name="end_time" class="form-control" required>
+                                        <input type="time" name="end_time" class="form-control" step="900">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Schedule</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        @endcan
+
+        <!-- EDIT SCHEDULE MODAL -->
+        @hasanyrole('admin')
+            <div class="modal fade" id="editScheduleModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <form id="editScheduleForm" method="POST">
+                        @csrf
+                        @method('PUT') {{-- Use PUT method for updates --}}
+
+                        <div class="modal-content">
+                            <!-- HEADER -->
+                            <div class="modal-header bg-primary text-white"> {{-- Changed color for edit --}}
+                                <h5 class="modal-title">Edit Schedule</h5>
+                                <button type="button" class="close text-white" data-dismiss="modal">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+
+                            <!-- BODY -->
+                            <div class="modal-body">
+                                <div class="row">
+                                    <!-- DEPARTMENT -->
+                                    <div class="col-md-6 mb-3">
+                                        <label>Department</label>
+                                        <select name="department_id" id="edit_department_id" class="form-control" required>
+                                            <option value="" selected hidden>Choose Department</option>
+                                            @foreach ($departments as $department)
+                                                <option value="{{ $department->id }}">{{ $department->department_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <!-- SUBJECT -->
+                                    <div class="col-md-6 mb-3">
+                                        <label>Subject</label>
+                                        <select name="subject_id" id="edit_subject" class="form-control" required>
+                                            <option value="" selected hidden>-- Select Subject --</option>
+
+                                        </select>
+                                    </div>
+                                    <!-- TEACHER -->
+                                    <div class="col-md-6 mb-3">
+                                        <label>Teacher</label>
+                                        <select name="teacher_id" id="edit_teacher" class="form-control" required>
+                                            <option value="" selected hidden>-- Select Teacher --</option>
+
+                                        </select>
+                                    </div>
+                                    <!-- CLASS -->
+                                    <div class="col-md-6 mb-3">
+                                        <label>Class</label>
+                                        <select name="class_id" id="edit_classes" class="form-control" required>
+                                            <option value="" selected hidden>-- Select Class --</option>
+                                            @foreach ($classes as $class)
+                                                <option value="{{ $class->id }}">{{ $class->class_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <!-- DAY -->
+                                    <div class="col-md-6 mb-3">
+                                        <label>Day</label>
+                                        <select name="day" id="edit_day" class="form-control" required>
+                                            <option value="" selected hidden>-- Select Day --</option>
+                                            <option>Monday</option>
+                                            <option>Tuesday</option>
+                                            <option>Wednesday</option>
+                                            <option>Thursday</option>
+                                            <option>Friday</option>
+                                            <option>Saturday</option>
+                                            <option>Sunday</option>
+                                        </select>
                                     </div>
 
+                                    <div class="col-md-3 mb-3">
+                                        <label>Start Time</label>
+                                        <input type="time" name="start_time" id="edit_start_time" class="form-control"
+                                            required>
+                                    </div>
+
+                                    <div class="col-md-3 mb-3">
+                                        <label>End Time</label>
+                                        <input type="time" name="end_time" id="edit_end_time" class="form-control"
+                                            required>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- FOOTER -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                    Cancel
-                                </button>
-                                <button type="submit" class="btn btn-primary">
-                                    Save Schedule
-                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-warning">Update Schedule</button>
                             </div>
-
                         </div>
                     </form>
-
                 </div>
             </div>
-
-            <!-- ===================================================== -->
-            <!-- ENROLL STUDENT MODAL -->
-            @foreach ($schedules as $schedule)
-                <!-- 🔥 FIX: MODAL MUST BE HERE (INSIDE LOOP) -->
-                <div class="modal fade" id="enrollModal{{ $schedule->id }}" tabindex="-1" role="dialog">
-
-                    <div class="modal-dialog">
-
-                        <form action="{{ route('enrollment.store') }}" method="POST">
-                            @csrf
-
-                            <input type="hidden" name="class_id" value="{{ $schedule->class->id }}">
-                            <input class="schedule_id" type="hidden" name="schedule_id" value="{{ $schedule->id }}">
-
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <h5>Enroll Student</h5>
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        &times;
-                                    </button>
-                                </div>
-
-                                <div class="modal-body">
-
-                                    <select name="student_id" class="form-control select2-student js-example-basic-single"
-                                        required>
-                                        <option value="" disabled selected>Select Student</option>
+        @endhasanyrole
 
 
 
-                                    </select>
 
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button class="btn btn-secondary" data-dismiss="modal">
-                                        Close
-                                    </button>
-                                    <button class="btn btn-primary">
-                                        Enroll
-                                    </button>
-                                </div>
-
-                            </div>
-
-                        </form>
-
-                    </div>
-                </div>
-            @endforeach
-
-
+        </div>
     </section>
 
 @endsection
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        @foreach ($schedules as $schedule)
+        $(document).on('submit', '[id^="enrollForm"]', function() {
+            let form = this;
 
-            $('#enrollForm{{ $schedule->id }}').on('submit', function() {
-                let form = this;
+            setTimeout(function() {
+                form.reset();
+                $(form).closest('.modal').modal('hide');
+            }, 300);
+        });
 
-                setTimeout(function() {
-
-                    // reset input
-                    form.reset();
-
-                    // close modal
-                    $('#enrollModal{{ $schedule->id }}').modal('hide');
-
-                }, 300);
-
+        // ==============================
+        $('.modal').on('shown.bs.modal', function() {
+            $(this).find('.select2-student').select2({
+                dropdownParent: $(this),
+                placeholder: "Search student...",
+                width: '100%'
             });
+        });
+
+        $('.btnadd').on('click', function() {
+            let scheduleId = $(this).data('id'); // FIXED
+
+            let $select = $('.js-example-basic-single');
+            $select.empty();
+
+            $.ajax({
+                url: "/check-student",
+                method: "GET",
+                data: {
+                    schedule_id: scheduleId
+                },
+                dataType: "json",
+                success: function(data) {
+                    data.forEach(function(item) {
+                        let option = new Option(item.text, item.id, false, false);
+                        $select.append(option);
+                    });
+                    $select.trigger('change');
+                },
+                error: function(xhr) {
+                    console.error("Error:", xhr.responseText);
+                }
+            });
+        });
 
 
-            $('.modal').on('shown.bs.modal', function() {
-                $(this).find('.select2-student').select2({
-                    dropdownParent: $(this),
-                    placeholder: "Search student...",
-                    width: '100%'
+        function loadSubjectsAndTeachers(deptId, subjectSelector, teacherSelector) {
+
+            let $subject = $(subjectSelector);
+            let $teacher = $(teacherSelector);
+
+            $subject.empty().append('<option>Loading...</option>');
+            $teacher.empty().append('<option>Loading...</option>');
+
+            if (!deptId) return;
+
+            // Subjects
+            $.get('/get-subjects/' + deptId, function(data) {
+                $subject.empty().append('<option value="">-- Select Subject --</option>');
+                $.each(data, function(_, subject) {
+                    $subject.append(
+                        `<option value="${subject.id}">${subject.subject_name}</option>`);
                 });
             });
-            $('')
-        @endforeach
-        $('.btnadd').on('click', function() {
 
-            var scheduleId = $('.schedule_id').val();
-
-            console.log('Clicked Enroll for Schedule ID: ' + scheduleId);
-            $('.js-example-basic-single').empty();
-            $.ajax({
-                url: "/check-student?" + $.param({
-                    schedule_id: scheduleId
-                }), // The server endpoint
-                method: "GET", // Request type
-                dataType: "json", // Expected data format
-                success: function(response) {
-                    console.log("done");
-                    var data = response;
-                    console.log(response);
-
-                    // Loop through the array to add options
-                    data.forEach(function(item) {
-                        var newOption = new Option(item.text, item.id, false,
-                            false);
-                        $('.js-example-basic-single').append(newOption).trigger(
-                            'change');
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error:", error); // Code to handle request failure
-                }
+            // Teachers
+            $.get('/get-teachers/' + deptId, function(data) {
+                $teacher.empty().append('<option value="">-- Select Teacher --</option>');
+                $.each(data, function(_, teacher) {
+                    $teacher.append(`<option value="${teacher.id}">${teacher.name}</option>`);
+                });
             });
+        }
 
-        });
+        // ==============================
         $('#department_id').on('change', function() {
-            //  alert('hey');
-            let deptId = $(this).val();
-            // alert(deptId)
-            $('#subject').empty();
-
-            $.ajax({
-                url: '/get-subjects/' + deptId,
-                method: 'GET',
-                success: function(data) {
-                    $('#subject').append('<option>Select Subject</option>');
-                    $.each(data, function(key, subject) {
-                        $('#subject').append('<option value="' + subject.id + '">' +
-                            subject.subject_name + '</option>');
-                    });
-                }
-
-            });
-        });
-        $('#department_id').change(function() {
-            var department_id = $(this).val();
-            $('#teacher').empty(); // Clear teachers
-
-            $.ajax({
-                url: '/get-teachers/' + department_id,
-                type: 'GET',
-                success: function(data) {
-                    $('#teacher').append('<option>Select Teacher</option>');
-                    $.each(data, function(key, value) {
-                        $('#teacher').append('<option value="' + value
-                            .id + '">' + value.name + '</option>');
-                    });
-                }
-            });
+            loadSubjectsAndTeachers(
+                $(this).val(),
+                '#subject',
+                '#teacher'
+            );
         });
 
+
+        $('.btnedit').on('click', function() {
+
+            let id = $(this).data('id');
+
+            $.get('/schedule/' + id + '/edit', function(data) {
+
+                    $('#editScheduleForm').attr('action', '/schedule/update/' + data.id);
+
+                    $('#edit_department_id')
+                        .val(data.teacher.department_id)
+                        .trigger('change');
+
+                    setTimeout(function() {
+                        $('#edit_subject').val(data.subject_id);
+                        $('#edit_teacher').val(data.teacher_id);
+                    }, 300);
+
+                    // Other fields
+                    $('#edit_classes').val(data.class_id);
+                    $('#edit_day').val(data.day);
+                    $('#edit_start_time').val(data.start_time.substring(0, 5));
+                    $('#edit_end_time').val(data.end_time.substring(0, 5));
+
+                    $('#editScheduleModal').modal('show');
+                })
+                .fail(function(xhr) {
+                    console.error(xhr.responseText);
+                    alert('Error loading schedule');
+                });
+        });
+
+
+        $('#edit_department_id').on('change', function() {
+            loadSubjectsAndTeachers(
+                $(this).val(),
+                '#edit_subject',
+                '#edit_teacher'
+            );
+        });
 
     });
 </script>

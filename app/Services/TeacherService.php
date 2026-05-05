@@ -13,30 +13,22 @@ class TeacherService
         $this->userService = new UserService();
     }
 
-
-
     public function TeacherStore(array $data, $image = null)
     {
-
         $imagePath = null;
 
         if ($image) {
             $imagePath = $image->store('teachers', 'private');
         }
 
-        // Create user
-        $user = $this->userService->store([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
-
+        // Create user (LOGIN ACCOUNT)
+        $user = $this->userService->store($data);
 
         if ($user) {
             $user->assignRole('teacher');
         }
 
-        // Create teacher profile
+        // Create teacher profile (NO PASSWORD HERE)
         return Teacher::create([
             'user_id'       => $user->id,
             'teacher_code'  => $data['teacher_code'],
@@ -45,15 +37,16 @@ class TeacherService
             'dob'           => $data['dob'],
             'phone'         => $data['phone'],
             'email'         => $data['email'],
-            'password' => bcrypt($data['password']),
+            'password'      => Hash::make($data['password']),
             'department_id' => $data['department'],
             'image'         => $imagePath,
         ]);
     }
-    public function edit(Teacher $teacher)
-    {
-        return view('Teacher.edit', compact('teacher'));
-    }
+    // public function edit(Teacher $teacher)
+
+    // {
+    //     return view('Teacher.edit', compact('teacher'));
+    // }
 
     # ===================== UPDATE =====================
     public function update($teacher, array $data)
@@ -76,7 +69,7 @@ class TeacherService
             'dob'          => $data['dob'],
             'phone'        => $data['phone'],
             'email'        => $data['email'],
-            'subject'      => $data['subject'],
+            // 'subject'      => $data['subject'],
             'image'        => $imagePath,
         ]);
 

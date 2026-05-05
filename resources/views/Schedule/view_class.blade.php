@@ -125,7 +125,7 @@
                     </h3>
 
                     <span class="text-muted">
-                       {{ $schedule->subjects?->subject_name ?? 'Course Schedule Management (Ms-Word and Ms-Excel)' }}
+                        {{ $schedule->subject->subject_name ?? 'Course Schedule Management (Ms-Word and Ms-Excel)' }}
 
                     </span>
                 </div>
@@ -150,7 +150,7 @@
                         <div class="p-2">
                             <small class="text-muted d-block">Department</small>
                             <div class="fw-semibold text-dark">
-                               {{ optional(optional($schedule->teacher)->department)->department_name ?? 'English' }}
+                                {{ optional(optional($schedule->teacher)->department)->department_name ?? 'English' }}
                             </div>
                         </div>
                     </div>
@@ -207,11 +207,14 @@
 
                 <strong>Student List</strong>
 
-                {{-- BUTTON OPEN MODAL --}}
-                <a href="#" id="btnadd" class="btn btn-primary btn-sm float-right" data-toggle="modal"
-                    data-target="#enrollModal">
-                    <i class="fas fa-plus"></i>
-                </a>
+                @hasanyrole('admin|teacher')
+                    {{-- BUTTON OPEN MODAL — visible to admin and teacher only --}}
+                    <a href="#" id="btnadd" class="btn btn-primary btn-sm float-right" data-toggle="modal"
+                        data-target="#enrollModal">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                @endhasanyrole
+
 
             </div>
 

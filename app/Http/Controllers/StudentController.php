@@ -37,14 +37,14 @@ class StudentController extends Controller
     {
         // dd($request->all());
 
-        $scheduleId = $request->query('schedule_id');
-        $studentsInSchedule = DB::table('schedule_students')->where('schedule_id', $scheduleId)->pluck('student_id','id')->toArray();
-        $students = Student::whereNotIn('id', $studentsInSchedule)->get();
+        $scheduleId         = $request->query('schedule_id');
+        $studentsInSchedule = DB::table('schedule_students')->where('schedule_id', $scheduleId)->pluck('student_id', 'id')->toArray();
+        $students           = Student::whereNotIn('id', $studentsInSchedule)->get();
         // $getDepartmentid = Department::Whare('')
         $data = [];
         foreach ($students as $student) {
             $data[] = [
-                'id' => $student->id,
+                'id'   => $student->id,
                 'text' => $student->name,
             ];
         }
@@ -52,14 +52,13 @@ class StudentController extends Controller
         // dd($students);
     }
     public function create()
-{
-    // Retrieve data to pass to the view
-    $departments = Department::all();
+    {
+        // Retrieve data to pass to the view
+        $departments = Department::all();
 
-    // Pass variable 'departments' to 'resources/views/Student/create.blade.php'
-    return view('Student.create', compact('departments'));
-}
-
+        // Pass variable 'departments' to 'resources/views/Student/create.blade.php'
+        return view('Student.create', compact('departments'));
+    }
 
     public function store(StoreStudentRequest $request)
     {
@@ -67,12 +66,12 @@ class StudentController extends Controller
         return redirect()->route('student.index')
             ->with('success', 'Student and login account created successfully');
     }
-
-    public function edit($id)
+    public function edit(Student $student)
     {
-        $student = Student::findOrFail($id);
-        return $this->studentService->edit($student);
+         $departments = Department::all();
+        return view('Student.edit', compact('student', 'departments'));
     }
+
 
     public function update(UpdateStudentRequest $request, Student $student)
     {

@@ -32,7 +32,7 @@ class StoreTeacherRequest extends FormRequest
         'dob'          => 'nullable|date',
         'phone'        => 'nullable|string|max:20',
         'email'        => 'required|email|unique:users,email|unique:teachers,email',
-        'password'     => 'required|string|min:6',
+        'password'     => 'nullable|string|min:6',
         'department'      => 'required|string|max:255',
         'image'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ];

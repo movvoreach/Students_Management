@@ -9,6 +9,7 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Services\ScheduleService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
@@ -26,53 +27,40 @@ class ScheduleController extends Controller
     {
         $user = Auth::user();
 
+        $query = Schedule::with(['teacher', 'class', 'subject'])
+            ->withCount('students');
+
+        if ($user->hasRole('teacher')) {
+
+            $teacherId = Teacher::where('user_id', $user->id)->value('id');
+            $query->where('teacher_id', $teacherId);
+
+        } elseif ($user->hasRole('student')) {
+
+            $departmentId = Student::where('user_id', $user->id)->value('department_id');
+            $query->where('department_id', $departmentId);
+
+        } elseif ($user->hasRole('admin')) {
+
+            if (request()->input('department_id')) {
+                $query->where('department_id', request('department_id'));
+            }
+        }
+
+        $schedules = $query
+            ->orderBy('start_time')
+            ->paginate(10)
+            ->withQueryString();
+
+        $time = (clone $query)
+            ->select('start_time', 'end_time')
+            ->groupBy('start_time', 'end_time')->get();
+
         $departments = Department::all();
         $teachers    = Teacher::select('id', 'name')->get();
         $classes     = Classroom::select('id', 'class_name')->get();
         $students    = Student::select('id', 'name')->get();
         $subjects    = Subject::all();
-
-        $query = Schedule::with(['teacher', 'class', 'subject']);
-
-        // ================= ADMIN =================
-        if ($user->hasRole('admin')) {
-            $schedules = $query->withCount('students')->get();
-        }
-
-        // ================= TEACHER =================
-        elseif ($user->hasRole('teacher')) {
-
-            $teacher = Teacher::where('user_id', $user->id)->first();
-
-            if (! $teacher) {
-                $schedules = collect();
-            } else {
-                $schedules = $query
-                    ->where('teacher_id', $teacher->id)
-                    ->withCount('students')
-                    ->get();
-            }
-        }
-
-        // ================= STUDENT =================
-        elseif ($user->hasRole('student')) {
-
-            $student = Student::where('user_id', $user->id)->first();
-
-            if (! $student) {
-                $schedules = collect();
-            } else {
-                $schedules = $query
-                    ->where('department_id', $student->department_id)
-                    ->withCount('students')
-                    ->get();
-            }
-        }
-
-        // ================= DEFAULT =================
-        else {
-            $schedules = collect();
-        }
 
         return view('Schedule.index', compact(
             'schedules',
@@ -80,7 +68,8 @@ class ScheduleController extends Controller
             'classes',
             'students',
             'subjects',
-            'departments'
+            'departments',
+            'time'
         ));
     }
 
@@ -129,7 +118,7 @@ class ScheduleController extends Controller
     {
         $student = Student::findOrFail($id);
 
-        $schedules = $student->schedules()->with(['class', 'teacher'])->withCount('students')->get();
+        $schedules = $student->schedules()->with(['class', 'teacher', 'subject'])->withCount('students')->get();
 
         return view('Schedule.student_detail', compact('student', 'schedules'));
     }
@@ -142,6 +131,42 @@ class ScheduleController extends Controller
     {
         $teachers = Teacher::where('department_id', $departmentId)->get();
         return response()->json($teachers);
+    }
+
+    // app/Http/Controllers/ScheduleController.php
+
+// ... (your existing imports and index method)
+
+    public function edit(Schedule $schedule)
+    {
+
+        $schedule->load('subject', 'teacher.department', 'class');
+        return response()->json($schedule);
+    }
+
+    public function update(Request $request, Schedule $schedule)
+    {
+        $request->validate([
+            'department_id' => 'required|integer|exists:departments,id',
+            'subject_id'    => 'required|integer|exists:subjects,id',
+            'teacher_id'    => 'required|integer|exists:teachers,id',
+            'class_id'      => 'required|integer|exists:classes,id',
+            'day'           => 'required|string',
+            'start_time'    => 'required',
+            'end_time'      => 'required|after:start_time',
+        ]);
+
+        $schedule->update([
+            'department_id' => $request->department_id,
+            'subject_id'    => $request->subject_id,
+            'teacher_id'    => $request->teacher_id,
+            'class_id'      => $request->class_id,
+            'day'           => $request->day,
+            'start_time'    => $request->start_time,
+            'end_time'      => $request->end_time,
+        ]);
+
+        return redirect()->back()->with('success', 'Schedule updated successfully!');
     }
 
 }

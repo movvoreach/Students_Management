@@ -3,42 +3,39 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Support\Facades\DB;
 
 class PermissionsSeeder extends Seeder
 {
     public function run(): void
     {
-        // Clear cache
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        DB::table('permissions')->insert([
+            // STUDENT
+            ['name' => 'view student', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'create student', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'edit student', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'delete student', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'view studentdetail', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
 
-        $permissions = [
-            'view student',
-            'edit student',
-            'delete student',
-            'create student',
-            'view studentdetail',
+            // TEACHER
+            ['name' => 'view teacher', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'create teacher', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'edit teacher', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'delete teacher', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
 
-            'view teacher',
-            'edit teacher',
-            'delete teacher',
-            'create teacher',
-            'view studentdetail',
+            // SCHEDULE
+            ['name' => 'view schedule', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'create schedule', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'edit schedule', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'delete schedule', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'view scheduledetail', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
 
-            'view schedule',
-            'edit schedule',
-            'delete schedule',
-            'create schedule',
-            'view scheduledetail',
-
-            'view class',
-            'create class',
-            'edit class',
-            'delete class',
-             'view classdetail',
-        ];
-
-
+            // CLASS
+            ['name' => 'view class', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'create class', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'edit class', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'delete class', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'view classdetail', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+        ]);
     }
 }

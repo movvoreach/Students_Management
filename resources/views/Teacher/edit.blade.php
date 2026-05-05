@@ -136,7 +136,7 @@
                     </div>
 
                     <!-- Password (optional update) -->
-{{--
+
                     <div class="col-md-6">
                         <label for="departmentSelect">Department</label>
                         <select name="department" id="departmentSelect" class="form-control">
@@ -148,7 +148,7 @@
                                 </option>
                             @endforeach
                         </select>
-                    </div> --}}
+                    </div>
 
                     <!-- Image -->
                     <div class="col-md-6 mt-3">

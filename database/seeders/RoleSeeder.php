@@ -10,45 +10,40 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create Roles
-        $adminRole = Role::create(['name' => 'admin']);
-        $teacherRole = Role::create(['name' => 'teacher']);
-        $studentRole = Role::create(['name' => 'student']);
+        // Create Roles safely
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
+        $studentRole = Role::firstOrCreate(['name' => 'student']);
 
-        // Get Permissions
-        $all_permissions = Permission::all();
+        // Get all permissions
+        $allPermissions = Permission::all();
 
-        $viewStudent = Permission::where('name', 'view student')->first();
-        $editStudent = Permission::where('name', 'edit student')->first();
-        $createStudent = Permission::where('name', 'create student')->first();
-        $detailstudent = Permission::where('name', 'view studentdetail')->first();
+        // Safe permission groups
+        $studentPermissions = Permission::whereIn('name', [
+            'view student',
+            'create student',
+            'edit student',
+            'view studentdetail',
+            'view schedule',
+        ])->get();
 
-        $viewTeacher = Permission::where('name', 'view teacher')->first();
+        $teacherPermissions = Permission::whereIn('name', [
+            'view student',
+            'create student',
+            'edit student',
+            'view teacher',
+            'view schedule',
+            'create schedule',
+            'edit schedule',
+        ])->get();
 
-        $viewSchedule = Permission::where('name', 'view schedule')->first();
-        $editSchedule = Permission::where('name', 'edit schedule')->first();
-        $createSchedule = Permission::where('name', 'create schedule')->first();
-        $detailschedule= Permission::where('name' ,'view scheduledetail')->first();
-        $deleteschedule = Permission::whare('name', 'delete schedule')->first();
+        // ADMIN → ALL
+        $adminRole->syncPermissions($allPermissions);
 
-        // Admin gets all permissions
-        $adminRole->syncPermissions($all_permissions);
+        // TEACHER
+        $teacherRole->syncPermissions($teacherPermissions);
 
-        // Teacher permissions
-        $teacherRole->syncPermissions([
-            $viewStudent,
-            $editStudent,
-            $createStudent,
-            $viewTeacher,
-            $viewSchedule,
-            $editSchedule,
-            $createSchedule,
-        ]);
-
-        // Student permissions
-        $studentRole->syncPermissions([
-            $viewStudent,
-            $viewSchedule,
-        ]);
+        // STUDENT
+        $studentRole->syncPermissions($studentPermissions);
     }
 }
