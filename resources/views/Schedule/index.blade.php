@@ -126,7 +126,7 @@
                             </select>
                         </div>
 
-                        {{-- <div class="col-md-2 mb-2">
+                        <div class="col-md-2 mb-2">
                             <select name="teacher_id" class="form-control" onchange="this.form.submit()">
                                 <option value="">All Teachers</option>
                                 @foreach ($teachers as $teacher)
@@ -136,9 +136,9 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div> --}}
+                        </div>
 
-                        {{-- <div class="col-md-2 mb-2">
+                        <div class="col-md-2 mb-2">
                             <select name="day" class="form-control" onchange="this.form.submit()">
                                 <option value="">All Days</option>
                                 @foreach (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $dayOption)
@@ -147,7 +147,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div> --}}
+                        </div>
                     @endrole
 
                     <div class="col-md-1 mb-2"> {{-- Refresh/Submit button --}}
