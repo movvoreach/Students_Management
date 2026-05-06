@@ -175,249 +175,146 @@
 
         @can('view schedule')
 
-            <div class="row">
-                <div class="col-12">
+                <div class="row">
+                    <div class="col-12">
 
-                    @if (auth()->user()->hasRole('teacher'))
-                        <h5 class="mb-3">My Schedule</h5>
+                        @if (auth()->user()->hasRole('teacher'))
+                            @php
+                                $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                            @endphp
 
-                        <div class="table-responsive">
-                            <table class="table table-bordered text-center align-middle">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Day</th>
-                                        <th>Time</th>
-                                        <th>Subject</th>
-                                        <th>Class</th>
-                                        {{-- <th>Actions</th> --}}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($schedules as $schedule)
+                            <h5 class="mb-3">My Schedule</h5>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered text-center align-middle">
+
+                                    <thead class="table-dark">
                                         <tr>
-                                            <td>{{ $schedule->day }}</td>
-                                            <td>{{ $schedule->start_time }} - {{ $schedule->end_time }}</td>
-                                            <td>{{ $schedule->subject->subject_name ?? '-' }}</td>
-                                            <td>Room {{ $schedule->class->class_name ?? '-' }}</td>
-                                            {{-- <td>
-                                                    @can('view schedule')
-                                                        <a href="{{ route('schedule.viewClass', $schedule->id) }}"
-                                                            class="btn btn-outline-primary">
-                                                            <i class="fa-solid fa-plus"></i>
-                                                        </a>
-                                                    @endcan
-                                                </td> --}}
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="4">No schedule found</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    @elseif (auth()->user()->hasRole('student'))
-                        @php
-                            $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-                        @endphp
-
-                        <h5 class="mb-3">Class Timetable</h5>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered text-center align-middle">
-
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Time</th>
-                                        @foreach ($days as $day)
-                                            <th>{{ $day }}</th>
-                                        @endforeach
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach ($time as $time)
-                                        <tr>
-
-                                            {{-- TIME --}}
-                                            <td>
-                                                {{ \Carbon\Carbon::parse($time->start_time)->format('h:i A') }}
-                                                -
-                                                {{ \Carbon\Carbon::parse($time->end_time)->format('h:i A') }}
-                                            </td>
-
-                                            {{-- DAYS  --}}
+                                            <th>Time</th>
                                             @foreach ($days as $day)
-                                                @php
-                                                    $items = $schedules
-                                                        ->where('day', $day)
-                                                        ->where('start_time', $time->start_time);
-                                                @endphp
-
-                                                <td style="min-width:150px">
-
-                                                    @forelse ($items as $schedule)
-                                                        <div class="p-2 mb-1  bg-light">
-
-                                                            <strong>
-                                                                {{ $schedule->subject->subject_name ?? '-' }}
-                                                            </strong><br>
-
-                                                            <small>
-                                                                {{ $schedule->teacher->name ?? '-' }}
-                                                            </small><br>
-
-                                                            <span class="text-muted">
-                                                                Room {{ $schedule->class->class_name ?? '-' }}
-                                                            </span>
-
-                                                        </div>
-                                                    @empty
-                                                        <span class="text-muted">-</span>
-                                                    @endforelse
-
-                                                </td>
+                                                <th>{{ $day }}</th>
                                             @endforeach
-
                                         </tr>
-                                    @endforeach
-                                </tbody>
+                                    </thead>
 
-                            </table>
-                        </div>
-                    @else
-                        <div class="card shadow-sm border-0">
-                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0 fw-bold text-primary">
-                                    <i class="fas fa-calendar-alt me-2"></i> Schedule List
-                                </h5>
-                            </div>
-
-                            <div id="scheduleTable">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-bordered align-middle text-center">
-                                        <thead class="table-dark">
+                                    <tbody>
+                                        @foreach ($time as $timeSlot)
                                             <tr>
-                                                <th>Day</th>
-                                                <th>Department</th>
-                                                <th>Subject , Room</th>
-                                                <th>Teacher</th>
-                                                <th>Time</th>
-                                                <th width="120">Actions</th>
-                                            </tr>
-                                        </thead>
 
-                                        <tbody>
-                                            @forelse ($schedules as $schedule)
-                                                <tr>
+                                                {{-- TIME --}}
+                                                <td>
+                                                    {{ \Carbon\Carbon::parse($timeSlot->start_time)->format('h:i A') }}
+                                                    -
+                                                    {{ \Carbon\Carbon::parse($timeSlot->end_time)->format('h:i A') }}
+                                                </td>
 
-                                                    <!-- Day -->
-                                                    <td>
-                                                        <span class="badge bg-light text-dark">
-                                                            {{ $schedule->day }}
-                                                        </span>
-                                                    </td>
+                                                {{-- DAYS --}}
+                                                @foreach ($days as $day)
+                                                    @php
+                                                        $items = $schedules
+                                                            ->where('day', $day)
+                                                            ->where('start_time', $timeSlot->start_time);
+                                                    @endphp
 
-                                                    <!-- Department -->
-                                                    <td>
-                                                        <span class="fw-semibold text-secondary">
-                                                            {{ $schedule->teacher->department->department_name ?? 'N/A' }}
-                                                        </span>
-                                                    </td>
+                                                    <td style="min-width:150px">
 
-                                                    <!-- Subject + Teacher Inline -->
-                                                    <td>
-                                                        <div class="fw-semibold text-primary">
-                                                            {{ $schedule->subject->subject_name ?? 'N/A' }} <small
-                                                                class="text-muted">
-                                                                ({{ $schedule->class->class_name ?? 'N/A' }})
-                                                            </small>
-                                                        </div>
+                                                        @forelse ($items as $schedule)
+                                                            <div class="p-2 mb-1 bg-light">
 
-                                                    </td>
+                                                                <strong>
+                                                                    {{ $schedule->subject->subject_name ?? '-' }}
+                                                                </strong><br>
 
-                                                    <!-- Teacher (separate column optional) -->
-                                                    <td>
-                                                        <span class="fw-semibold">
-                                                            {{ $schedule->teacher->name ?? 'N/A' }}
-                                                        </span>
-                                                    </td>
+                                                                <small>
+                                                                    Class {{ $schedule->class->class_name ?? '-' }}
+                                                                </small><br>
 
-                                                    <!-- Time -->
-                                                    <td>
-                                                        <span class="badge bg-success">
-                                                            {{ \Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }}
-                                                            -
-                                                            {{ \Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
-                                                        </span>
-                                                    </td>
+                                                                <span class="text-muted">
+                                                                    {{ $schedule->start_time }} - {{ $schedule->end_time }}
+                                                                </span>
 
-                                                    <!-- Actions -->
-                                                    <td>
-                                                        @can('view schedule')
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-sm btn-outline-primary dropdown-toggle"
-                                                                    data-bs-toggle="dropdown">
-                                                                    Actions
-                                                                </button>
-
-                                                                <ul class="dropdown-menu shadow border-0">
-
-                                                                    <li>
-                                                                        <a class="dropdown-item"
-                                                                            href="{{ route('schedule.viewClass', $schedule->id) }}">
-                                                                            <i class="fa fa-eye text-info me-2"></i> View
-                                                                        </a>
-                                                                    </li>
-
-                                                                    @can('edit schedule')
-                                                                        <li>
-                                                                            <a class="dropdown-item btnedit" href="#"
-                                                                                data-id="{{ $schedule->id }}">
-                                                                                <i class="fa fa-edit text-warning me-2"></i> Edit
-                                                                            </a>
-                                                                        </li>
-                                                                    @endcan
-
-                                                                    @can('delete schedule')
-                                                                        <li>
-                                                                            <hr class="dropdown-divider">
-                                                                        </li>
-
-                                                                        <li>
-                                                                            <form
-                                                                                action="{{ route('schedule.delete', $schedule->id) }}"
-                                                                                method="POST">
-                                                                                @csrf
-                                                                                @method('DELETE')
-
-                                                                                <button type="submit" class="dropdown-item text-danger"
-                                                                                    onclick="return confirm('Delete this schedule?')">
-                                                                                    <i class="fas fa-trash me-2"></i> Delete
-                                                                                </button>
-                                                                            </form>
-                                                                        </li>
-                                                                    @endcan
-
-                                                                </ul>
                                                             </div>
-                                                        @endcan
-                                                    </td>
+                                                        @empty
+                                                            <span class="text-muted">-</span>
+                                                        @endforelse
 
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td colspan="6" class="text-center py-4 text-muted">
-                                                        <i class="fas fa-folder-open fa-2x mb-2"></i><br>
-                                                        No schedules found
                                                     </td>
-                                                </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                @endforeach
 
-                                <!-- Pagination -->
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        @elseif(auth()->user()->hasRole('student'))
+                            @php
+                                $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                            @endphp
+
+                            <h5 class="mb-3">Class Timetable</h5>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered text-center align-middle">
+
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Time</th>
+                                            @foreach ($days as $day)
+                                                <th>{{ $day }}</th>
+                                            @endforeach
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach ($time as $time)
+                                            <tr>
+
+                                                {{-- TIME --}}
+                                                <td>
+                                                    {{ \Carbon\Carbon::parse($time->start_time)->format('h:i A') }}
+                                                    -
+                                                    {{ \Carbon\Carbon::parse($time->end_time)->format('h:i A') }}
+                                                </td>
+
+                                                {{-- DAYS  --}}
+                                                @foreach ($days as $day)
+                                                    @php
+                                                        $items = $schedules
+                                                            ->where('day', $day)
+                                                            ->where('start_time', $time->start_time);
+                                                    @endphp
+
+                                                    <td style="min-width:150px">
+
+                                                        @forelse ($items as $schedule)
+                                                            <div class="p-2 mb-1  bg-light">
+
+                                                                <strong>
+                                                                    {{ $schedule->subject->subject_name ?? '-' }}
+                                                                </strong><br>
+
+                                                                <small>
+                                                                    {{ $schedule->teacher->name ?? '-' }}
+                                                                </small><br>
+
+                                                                <span class="text-muted">
+                                                                    Room {{ $schedule->class->class_name ?? '-' }}
+                                                                </span>
+
+                                                            </div>
+                                                        @empty
+                                                            <span class="text-muted">-</span>
+                                                        @endforelse
+
+                                                    </td>
+                                                @endforeach
+
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+
+                                </table>
                                 <div class="d-flex justify-content-between align-items-center mt-3 px-2">
                                     <small class="text-muted">
                                         Showing {{ $schedules->firstItem() ?? 0 }} to {{ $schedules->lastItem() ?? 0 }}
@@ -427,14 +324,158 @@
                                     {!! $schedules->links() !!}
                                 </div>
                             </div>
+                        @else
+                            <div class="card shadow-sm border-0">
+                                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0 fw-bold text-primary">
+                                        <i class="fas fa-calendar-alt me-2"></i> Schedule List
+                                    </h5>
+                                </div>
 
-                        </div>
-                    @endif
+                                <div id="scheduleTable">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered align-middle text-center">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Day</th>
+                                                    <th>Department</th>
+                                                    <th>Subject , Room</th>
+                                                    <th>Teacher</th>
+                                                    <th>Time</th>
+                                                    <th width="120">Actions</th>
+                                                </tr>
+                                            </thead>
 
+                                            <tbody>
+                                                @forelse ($schedules as $schedule)
+                                                    <tr>
+
+                                                        <!-- Day -->
+                                                        <td>
+                                                            <span class="badge bg-light text-dark">
+                                                                {{ $schedule->day }}
+                                                            </span>
+                                                        </td>
+
+                                                        <!-- Department -->
+                                                        <td>
+                                                            <span class="fw-semibold text-secondary">
+                                                                {{ $schedule->teacher->department->department_name ?? 'N/A' }}
+                                                            </span>
+                                                        </td>
+
+                                                        <!-- Subject + Teacher Inline -->
+                                                        <td>
+                                                            <div class="fw-semibold text-primary">
+                                                                {{ $schedule->subject->subject_name ?? 'N/A' }} <small
+                                                                    class="text-muted">
+                                                                    ({{ $schedule->class->class_name ?? 'N/A' }})
+                                                                </small>
+                                                            </div>
+
+                                                        </td>
+
+                                                        <!-- Teacher (separate column optional) -->
+                                                        <td>
+                                                            <span class="fw-semibold">
+                                                                {{ $schedule->teacher->name ?? 'N/A' }}
+                                                            </span>
+                                                        </td>
+
+                                                        <!-- Time -->
+                                                        <td>
+                                                            <span class="badge bg-success">
+                                                                {{ \Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }}
+                                                                -
+                                                                {{ \Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
+                                                            </span>
+                                                        </td>
+
+                                                        <!-- Actions -->
+                                                        <td>
+                                                            @can('view schedule')
+                                                                <div class="dropdown">
+                                                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle"
+                                                                        data-bs-toggle="dropdown">
+                                                                        Actions
+                                                                    </button>
+
+                                                                    <ul class="dropdown-menu shadow border-0">
+
+                                                                        <li>
+                                                                            <a class="dropdown-item"
+                                                                                href="{{ route('schedule.viewClass', $schedule->id) }}">
+                                                                                <i class="fa fa-eye text-info me-2"></i> View
+                                                                            </a>
+                                                                        </li>
+
+                                                                        @can('edit schedule')
+                                                                            <li>
+                                                                                <a class="dropdown-item btnedit" href="#"
+                                                                                    data-id="{{ $schedule->id }}">
+                                                                                    <i class="fa fa-edit text-warning me-2"></i> Edit
+                                                                                </a>
+                                                                            </li>
+                                                                        @endcan
+
+                                                                        @can('delete schedule')
+                                                                            <li>
+                                                                                <hr class="dropdown-divider">
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <form
+                                                                                    action="{{ route('schedule.delete', $schedule->id) }}"
+                                                                                    method="POST">
+                                                                                    @csrf
+                                                                                    @method('DELETE')
+
+                                                                                    <button type="submit" class="dropdown-item text-danger"
+                                                                                        onclick="return confirm('Delete this schedule?')">
+                                                                                        <i class="fas fa-trash me-2"></i> Delete
+                                                                                    </button>
+                                                                                </form>
+                                                                            </li>
+                                                                        @endcan
+
+                                                                    </ul>
+                                                                </div>
+                                                            @endcan
+                                                        </td>
+
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="6" class="text-center py-4 text-muted">
+                                                            <i class="fas fa-folder-open fa-2x mb-2"></i><br>
+                                                            No schedules found
+                                                        </td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Pagination -->
+                                    <div class="d-flex justify-content-between align-items-center mt-3 px-2">
+                                        <small class="text-muted">
+                                            Showing {{ $schedules->firstItem() ?? 0 }} to {{ $schedules->lastItem() ?? 0 }}
+                                            of {{ $schedules->total() }} entries
+                                        </small>
+
+                                        {!! $schedules->links() !!}
+                                    </div>
+                                </div>
+
+                            </div>
+                        @endif
+
+                    </div>
                 </div>
-            </div>
 
-        @endcan
+            @endcan
+
+
         <!-- CREATE SCHEDULE MODAL -->
         @can('create schedule')
             <div class="modal fade" id="scheduleContainer" tabindex="-1" role="dialog" aria-hidden="true">

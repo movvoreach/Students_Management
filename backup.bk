@@ -1,0 +1,49 @@
+ $query = Schedule::with(['teacher', 'class', 'subject'])
+            ->withCount('students');
+
+        if ($user->hasRole('teacher')) {
+
+            $teacherId = Teacher::where('user_id', $user->id)->value('id');
+            $query->where('teacher_id', $teacherId);
+
+        } elseif ($user->hasRole('student')) {
+
+            $departmentId = Student::where('user_id', $user->ids)->value('department_id');
+            $query->where('department_id', $departmentId);
+            dd($query->groupBy('start_time')->get());
+
+        } elseif ($user->hasRole('admin')) {
+
+            $query = $this->scheduleService->getWithsearchFilters($request->all(), $user);
+        }
+
+        $schedules = $query
+            ->orderByRaw("TIME(start_time) ASC")
+            ->paginate(10)
+            ->withQueryString();
+
+        $time = (clone $query)
+            ->select('start_time', 'end_time')
+            ->groupBy('start_time', 'end_time')
+            ->where('start_time', '>=', '08:00')
+            ->get();
+        $time = $query->select('start_time', 'end_time')->groupBy('start_time', 'end_time')
+            ->where('start_time', '>=', '08:00')
+            ->get();
+
+        $departments = Department::all();
+        $teachers    = Teacher::select('id', 'name')->get();
+        $classes     = Classroom::select('id', 'class_name')->get();
+        $students    = Student::select('id', 'name')->get();
+        $subjects    = Subject::all();
+
+        // dd($schedules);
+        return view('Schedule.index', compact(
+            'schedules',
+            'time',
+            'departments',
+            'teachers',
+            'classes',
+            'students',
+            'subjects'
+        ));

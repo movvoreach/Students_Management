@@ -2,8 +2,6 @@
 namespace App\Services;
 
 use App\Models\Schedule;
-use App\Models\Student;
-use App\Models\Teacher;
 
 class ScheduleService
 {
@@ -44,9 +42,8 @@ class ScheduleService
 
     public function getWithsearchFilters($filters = [], $user = null)
     {
-        $query = Schedule::query();
+        $query = Schedule::with(['teacher', 'class', 'subject'])->withCount('students');
 
-        // SEARCH
         if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
@@ -54,25 +51,22 @@ class ScheduleService
             });
         }
 
-        // FILTERS
         if (! empty($filters['day'])) {
             $query->where('day', $filters['day']);
         }
-         if (! empty($filters['department_id'])) {
+
+        if (! empty($filters['department_id'])) {
             $query->where('department_id', $filters['department_id']);
         }
+
         if (! empty($filters['teacher_id'])) {
             $query->where('teacher_id', $filters['teacher_id']);
         }
+
         if (! empty($filters['class_id'])) {
             $query->where('class_id', $filters['class_id']);
         }
 
-         if (! empty($filters['subject_id'])) {
-            $query->where('subject_id', $filters['subject_id']);
-        }
-        $perPage = $filters['per_page'] ?? 10;
-
-        return $query->orderBy('id', 'desc')->paginate($perPage);
+        return $query;
     }
 }

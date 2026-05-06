@@ -1,0 +1,120 @@
+
+        $user = Auth::user();
+        // dd($user->roles->pluck('name'));
+        $departmentId = $user->student ? $user->student->department_id : null;
+        // dd($departmentId);
+        $query = Schedule::query()->join('subjects', 'schedules.subject_id', '=', 'subjects.id')
+            ->join('teachers', 'schedules.teacher_id', '=', 'teachers.id')
+            ->join('classes', 'schedules.class_id', '=', 'classes.id')
+            ->select('schedules.*', 'subjects.subject_name', 'teachers.name as teacher_name', 'classes.class_name')
+            ->orderByRaw("TIME(schedules.start_time) ASC");
+        // dd($query->get());
+
+        $query = $query->where('schedules.department_id', $departmentId);
+        // dd($query->get());
+        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+        $times = Schedule::query()->where('department_id', $departmentId)
+            ->select('start_time', 'end_time')
+            ->groupBy('start_time', 'end_time')
+            ->get();
+        $data = $query->get();
+        // dd($data);
+        $schedules = [];
+        foreach ($times as $pkey => $time) {
+            foreach ($days as $day) {
+                $row = $data
+                    ->where('day', $day)
+                    ->where('start_time', $time->start_time)
+                    ->where('end_time', $time->end_time)
+                    ->first();
+                $schedules[$pkey]['time'] = $time->start_time . ' - ' . $time->end_time;
+                $schedules[$pkey][$day] = [
+                    'time' => $time->start_time . ' - ' . $time->end_time,
+                    'day' => $day,
+                    'subject_name' => $row->subject_name ?? '-',
+                ];
+                // dd($times);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+// contoller
+
+
+
+public function index(Request $request)
+{
+    $user = Auth::user();
+
+    $query = Schedule::with(['teacher', 'class', 'subject']);
+
+    // Role-based filtering
+    if ($user->hasRole('teacher')) {
+
+        $teacherId = Teacher::where('user_id', $user->id)->value('id');
+        $query->where('teacher_id', $teacherId);
+
+    } elseif ($user->hasRole('student')) {
+
+        $departmentId = Student::where('user_id', $user->id)->value('department_id');
+        $query->where('department_id', $departmentId);
+
+    } elseif ($user->hasRole('admin')) {
+
+        $query = $this->scheduleService->getWithsearchFilters($request->all(), $user);
+    }
+
+    // Get all schedules
+    $data = $query
+        ->orderByRaw("TIME(start_time) ASC")
+        ->get();
+
+    // Get unique time slots
+    $times = (clone $query)
+        ->select('start_time', 'end_time')
+        ->groupBy('start_time', 'end_time')
+        ->orderBy('start_time')
+        ->get();
+
+    // Days of week
+    $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+    // Build timetable grid
+    $schedules = [];
+
+    foreach ($times as $pkey => $time) {
+
+        foreach ($days as $day) {
+
+            $row = $data
+                ->where('day', $day)
+                ->where('start_time', $time->start_time)
+                ->where('end_time', $time->end_time)
+                ->first();
+
+            $schedules[$pkey]['time'] =
+                \Carbon\Carbon::parse($time->start_time)->format('h:i A')
+                . ' - ' .
+                \Carbon\Carbon::parse($time->end_time)->format('h:i A');
+
+            $schedules[$pkey][$day] = [
+                'subject_name' => $row->subject->subject_name ?? '-',
+                'teacher_name' => $row->teacher->name ?? '-',
+                'class_name'   => $row->class->class_name ?? '-',
+            ];
+        }
+    }
+
+    return view('schedule.index', compact('schedules', 'days'));
+}
