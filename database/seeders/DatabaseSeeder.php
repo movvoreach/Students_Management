@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionsSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
-        // $this->call(DepartmentSeeder::class);
+        $this->call(DepartmentSeeder::class);
+        $this->call(SubjectSeeder::class);
 
         Schema::enableForeignKeyConstraints();
 

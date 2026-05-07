@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreScheduleRequest;
@@ -19,22 +20,30 @@ class ScheduleController extends Controller
      * Display list
      */
     protected $scheduleService;
+
     public function __construct()
     {
-        $this->scheduleService = new ScheduleService();
+        $this->scheduleService = new ScheduleService;
     }
 
     public function index(Request $request)
     {
         $user = Auth::user();
 
+<<<<<<< Updated upstream
         $query = Schedule::with([
             'teacher.department',
             'class',
             'subject',
         ])->withCount('students');
 
+=======
+        // ================= BASE QUERY =================
+        $query = Schedule::with(['teacher.department', 'class', 'subject'])
+            ->withCount('students');
+>>>>>>> Stashed changes
 
+        // ================= ROLE FILTER =================
         if ($user->hasRole('teacher')) {
 
             $teacherId = Teacher::where('user_id', $user->id)->value('id');
@@ -49,6 +58,7 @@ class ScheduleController extends Controller
 
         } elseif ($user->hasRole('admin')) {
 
+<<<<<<< Updated upstream
             $query = $this->scheduleService
                 ->getWithsearchFilters($request->all(), $user);
         }
@@ -99,9 +109,38 @@ class ScheduleController extends Controller
 
             })
 
+=======
+            // Keep your service
+            $query = $this->scheduleService->getWithsearchFilters($request->all(), $user);
+        }
+
+        // ================= SORT =================
+        $query->orderByRaw('TIME(start_time) ASC');
+
+        // ================= DATA =================
+        if ($user->hasRole('admin')) {
+            // Admin → paginate (used in table + pagination UI)
+            $schedules = $query->paginate(10)->withQueryString();
+        } else {
+            // Teacher & Student → full collection (used for timetable grid)
+            $schedules = $query->get();
+        }
+
+        // ================= TIME SLOTS =================
+        $time = Schedule::query()
+            ->when($user->hasRole('teacher'), function ($q) use ($user) {
+                $teacherId = Teacher::where('user_id', $user->id)->value('id');
+                $q->where('teacher_id', $teacherId);
+            })
+            ->when($user->hasRole('student'), function ($q) use ($user) {
+                $departmentId = Student::where('user_id', $user->id)->value('department_id');
+                $q->where('department_id', $departmentId);
+            })
+>>>>>>> Stashed changes
             ->select('start_time', 'end_time')
 
             ->groupBy('start_time', 'end_time')
+<<<<<<< Updated upstream
 
             ->orderByRaw('TIME(start_time) ASC')
 
@@ -139,6 +178,18 @@ class ScheduleController extends Controller
         $subjects = Subject::all();
 
 
+=======
+            ->orderByRaw('TIME(start_time) ASC')
+            ->get();
+
+        // ================= EXTRA DATA =================
+        $departments = Department::all();
+        $teachers = Teacher::select('id', 'name')->get();
+        $classes = Classroom::select('id', 'class_name')->get();
+        $students = Student::select('id', 'name')->get();
+        $subjects = Subject::all();
+
+>>>>>>> Stashed changes
         return view('Schedule.index', compact(
             'schedules',
             'time',
@@ -156,8 +207,10 @@ class ScheduleController extends Controller
     {
         // dd($request->all());
         $this->scheduleService->createSchedule($request->validated());
+
         return back()->with('success', 'Schedule created successfully!');
     }
+
     public function viewClass($id)
     {
         $schedule = Schedule::with(['class', 'teacher', 'students'])->findOrFail($id);
@@ -166,6 +219,7 @@ class ScheduleController extends Controller
 
         return view('Schedule.view_class', compact('schedule', 'students'));
     }
+
     public function showClass($id)
     {
         $schedule = Schedule::with(['class', 'teacher', 'students'])->findOrFail($id);
@@ -182,6 +236,7 @@ class ScheduleController extends Controller
 
         return redirect()->back()->with('success', 'Schedule deleted successfully');
     }
+
     public function removeStudent($scheduleId, $studentId)
     {
         // Find schedule
@@ -201,32 +256,59 @@ class ScheduleController extends Controller
 
         return view('Schedule.student_detail', compact('student', 'schedules'));
     }
+
     public function getSubjects($departmentId)
     {
         $subjects = Subject::where('department_id', $departmentId)->get();
+
         return response()->json($subjects);
     }
+
     public function getTeachers($departmentId)
     {
         $teachers = Teacher::where('department_id', $departmentId)->get();
+
         return response()->json($teachers);
     }
 
     // app/Http/Controllers/ScheduleController.php
 
-// ... (your existing imports and index method)
+    // ... (your existing imports and index method)
 
     public function edit(Schedule $schedule)
     {
 
         $schedule->load('subject', 'teacher.department', 'class');
+
         return response()->json($schedule);
     }
 
     public function update(UpdateScheduleRequest $request, Schedule $schedule)
     {
+<<<<<<< Updated upstream
         $this->scheduleService->updateSchedule($schedule, $request->validated());
+=======
+        $request->validate([
+            'department_id' => 'required|integer|exists:departments,id',
+            'subject_id' => 'required|integer|exists:subjects,id',
+            'teacher_id' => 'required|integer|exists:teachers,id',
+            'class_id' => 'required|integer|exists:classes,id',
+            'day' => 'required|string',
+            'start_time' => 'required',
+            'end_time' => 'required|after:start_time',
+        ]);
+
+        $schedule->update([
+            'department_id' => $request->department_id,
+            'subject_id' => $request->subject_id,
+            'teacher_id' => $request->teacher_id,
+            'class_id' => $request->class_id,
+            'day' => $request->day,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+        ]);
+
+>>>>>>> Stashed changes
         return redirect()->back()->with('success', 'Schedule updated successfully!');
     }
-
 }

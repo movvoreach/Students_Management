@@ -263,6 +263,7 @@
                                     </tr>
                                 </thead>
 
+<<<<<<< Updated upstream
                                 <tbody>
                                     @foreach ($schedules as $scheduleRow)
                                         <tr>
@@ -310,10 +311,16 @@
                             </table>
                             <div class="d-flex justify-content-between align-items-center mt-3 px-2">
                                 {{-- <small class="text-muted">
+=======
+                                </table>
+                                <div class="d-flex justify-content-between align-items-center mt-3 px-2">
+                                    {{-- <small class="text-muted">
+>>>>>>> Stashed changes
                                         Showing {{ $schedules->firstItem() ?? 0 }} to {{ $schedules->lastItem() ?? 0 }}
                                         of {{ $schedules->total() }} entries
                                     </small> --}}
 
+<<<<<<< Updated upstream
                                 {{-- {!! $schedules->links() !!} --}}
                             </div>
                         </div>
@@ -323,6 +330,10 @@
                                 <h5 class="mb-0 fw-bold text-primary">
                                     <i class="fas fa-calendar-alt me-2"></i> Schedule List
                                 </h5>
+=======
+                                    {{-- {!! $schedules->links() !!} --}}
+                                </div>
+>>>>>>> Stashed changes
                             </div>
 
                             <div id="scheduleTable">
