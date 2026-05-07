@@ -49,10 +49,28 @@
 
         <!-- USER DROPDOWN -->
         <li class="nav-item dropdown">
+            @php
+                $user = auth()->user();
+
+                $profileImage = asset('backend/dist/img/user2-160x160.jpg');
+
+                if ($user->student && $user->student->image) {
+                    $profileImage = asset('storage/' . $user->student->image);
+                } elseif ($user->teacher && $user->teacher->image) {
+                    $profileImage = asset('storage/' . $user->teacher->image);
+                } elseif ($user->image) {
+                    $profileImage = asset('storage/' . $user->image);
+                }
+            @endphp
+
             <a class="nav-link" data-toggle="dropdown" href="#">
-                <img src="https://via.placeholder.com/30" class="img-circle" width="30" height="30"
-                    style="object-fit:cover;">
-                <span class="ml-1">{{ auth()->user()->name }}</span>
+                <img src="{{ $profileImage }}" class="img-circle" width="30" height="30"
+                    style="object-fit: cover;">
+
+                <span class="ml-1">
+                    {{ $user->name }}
+                </span>
+
                 <i class="fas fa-chevron-down text-xs ml-2"></i>
             </a>
 
@@ -65,7 +83,7 @@
 
                 <div class="dropdown-divider"></div>
 
-                <a href="#" class="dropdown-item">
+                <a href="{{ route('profile.show', auth()->user()->id) }}" class="dropdown-item">
                     <i class="fas fa-user-circle mr-2"></i>
                     Profile
                 </a>

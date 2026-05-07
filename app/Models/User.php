@@ -49,10 +49,13 @@ class User extends Authenticatable
     /**
  * Get the teacher associated with this record.
  */
+    // app/Models/User.php
+
+
+
     public function teacher()
     {
-
-        return $this->belongsTo(User::class);
+        return $this->hasOne(Teacher::class, 'user_id', 'id');
     }
 
     /**

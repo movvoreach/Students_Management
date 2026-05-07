@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
@@ -117,4 +118,14 @@ Route::middleware(['auth', 'role:teacher|student|admin'])->group(function () {
     Route::get('/student/{id}/show', [ScheduleController::class, 'studentSchedule'])
         ->name('schedule.student.detail')
         ->middleware('permission:view schedule');
+    Route::get('/profile/{id}/show', [ProfileController::class, 'index'])
+        ->name('profile.show')
+        ->middleware('permission:view profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])
+        ->name('profile.update')
+        ->middleware('permission:edit profile');
+    Route::put('/profile/password/update', [ProfileController::class, 'updatePassword'])
+        ->name('profile.password.update')
+        ->middleware('permission:edit profile');
+
 });

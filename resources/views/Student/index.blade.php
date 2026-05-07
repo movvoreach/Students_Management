@@ -109,18 +109,19 @@
                                     </div>
                                 </div>
 
-                                {{-- CLASS --}}
                                 <div class="col-md-2">
-                                    <select name="class_id" class="form-control" onchange="this.form.submit()">
-                                        <option value="">All Classes</option>
-                                        @foreach ($classes as $class)
-                                        <option value="{{ $class->id }}" {{ request('class_id')==$class->id ? 'selected'
-                                            : '' }}>
-                                            {{ $class->class_name }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                        <select class="form-control" name="department_id" onchange="this.form.submit()">
+                                            <option value="">Select Department</option>
+                                            {{-- Assuming $students is a collection of Student models with department relationship --}}
+                                            @foreach ($students->unique('department_id') as $student)
+                                                <option value="{{ $student->department_id }}"
+                                                    {{ request('department_id') == $student->department_id ? 'selected' : '' }}>
+                                                    {{ $student->department->department_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                    </div>
 
                                 {{-- GENDER --}}
                                 <div class="col-md-2">
@@ -267,10 +268,7 @@
                     </tbody>
                 </table>
 
-                {{-- PAGINATION --}}
-                <div class="mt-3">
-                    {{ $students->links() }}
-                </div>
+                {{-- PAGINATION --}
 
             </div>
 

@@ -25,80 +25,119 @@ class ScheduleController extends Controller
 
     public function index(Request $request)
     {
-        $user         = Auth::user();
-        $departmentId = $user->student ? $user->student->department_id : null;
-        $query        = Schedule::query()->join('subjects', 'schedules.subject_id', '=', 'subjects.id')
-            ->join('teachers', 'schedules.teacher_id', '=', 'teachers.id')
-            ->join('classes', 'schedules.class_id', '=', 'classes.id')
-            ->select('schedules.*', 'subjects.subject_name', 'teachers.name as teacher_name', 'classes.class_name')
-            ->orderByRaw("TIME(schedules.start_time) ASC");
+        $user = Auth::user();
 
-        $query = $query->where('schedules.department_id', $departmentId);
-        $days  = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+        $query = Schedule::with([
+            'teacher.department',
+            'class',
+            'subject',
+        ])->withCount('students');
 
-        $times = Schedule::query()->where('department_id', $departmentId)
-            ->select('start_time', 'end_time')
-            ->groupBy('start_time', 'end_time')
-            ->get();
-
-        $data      = $query->get();
-        $schedules = [];
-        foreach ($times as $pkey => $time) {
-            foreach ($days as $day) {
-                $row = $data
-                    ->where('day', $day)
-                    ->where('start_time', $time->start_time)
-                    ->where('end_time', $time->end_time)
-                    ->first();
-                $schedules[$pkey]['time'] = $time->start_time . ' - ' . $time->end_time;
-                $schedules[$pkey][$day]   = [
-                    'time'         => $time->start_time . ' - ' . $time->end_time,
-                    'day'          => $day,
-                    'subject_name' => $row->subject_name ?? '-',
-                ];
-                // dd($times);
-            }
-        }
-        // dd($schedules);
-        $query = Schedule::with(['teacher', 'class', 'subject'])
-            ->withCount('students');
 
         if ($user->hasRole('teacher')) {
 
             $teacherId = Teacher::where('user_id', $user->id)->value('id');
+
             $query->where('teacher_id', $teacherId);
 
         } elseif ($user->hasRole('student')) {
 
             $departmentId = Student::where('user_id', $user->id)->value('department_id');
+
             $query->where('department_id', $departmentId);
 
         } elseif ($user->hasRole('admin')) {
 
-            $query = $this->scheduleService->getWithsearchFilters($request->all(), $user);
+            $query = $this->scheduleService
+                ->getWithsearchFilters($request->all(), $user);
         }
 
-        $schedules = $query
-            ->orderByRaw("TIME(start_time) ASC")
-            ->paginate(10)
-            ->withQueryString();
 
-        $time = (clone $query)
+        $query->orderByRaw('TIME(start_time) ASC');
+
+
+        if ($user->hasRole('admin')) {
+
+            $data = $query->paginate(10)->withQueryString();
+
+            // collection for timetable
+            $scheduleCollection = collect($data->items());
+
+        } else {
+
+            $data = $query->get();
+
+            $scheduleCollection = $data;
+        }
+
+
+        $days = [
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+        ];
+
+
+        $time = Schedule::query()
+
+            ->when($user->hasRole('teacher'), function ($q) use ($user) {
+
+                $teacherId = Teacher::where('user_id', $user->id)->value('id');
+
+                $q->where('teacher_id', $teacherId);
+
+            })
+
+            ->when($user->hasRole('student'), function ($q) use ($user) {
+
+                $departmentId = Student::where('user_id', $user->id)->value('department_id');
+
+                $q->where('department_id', $departmentId);
+
+            })
+
             ->select('start_time', 'end_time')
+
             ->groupBy('start_time', 'end_time')
-            ->where('start_time', '>=', '08:00')
+
+            ->orderByRaw('TIME(start_time) ASC')
+
             ->get();
-        $time = $query->select('start_time', 'end_time')->groupBy('start_time', 'end_time')
-            ->where('start_time', '>=', '08:00')
-            ->get();
+
+
+        $schedules = [];
+
+        foreach ($time as $pkey => $t) {
+
+            $schedules[$pkey]['time'] = [
+                'start_time' => $t->start_time,
+                'end_time'   => $t->end_time,
+            ];
+
+            foreach ($days as $day) {
+
+                $items = $scheduleCollection
+                    ->where('day', $day)
+                    ->where('start_time', $t->start_time);
+
+                $schedules[$pkey][$day] = $items;
+            }
+        }
+
 
         $departments = Department::all();
-        $teachers    = Teacher::select('id', 'name')->get();
-        $classes     = Classroom::select('id', 'class_name')->get();
-        $students    = Student::select('id', 'name')->get();
-        $subjects    = Subject::all();
 
-        // dd($schedules);
+        $teachers = Teacher::select('id', 'name')->get();
+
+        $classes = Classroom::select('id', 'class_name')->get();
+
+        $students = Student::select('id', 'name')->get();
+
+        $subjects = Subject::all();
+
+
         return view('Schedule.index', compact(
             'schedules',
             'time',
@@ -106,7 +145,9 @@ class ScheduleController extends Controller
             'teachers',
             'classes',
             'students',
-            'subjects'
+            'subjects',
+            'days',
+            'data'
         ));
     }
 

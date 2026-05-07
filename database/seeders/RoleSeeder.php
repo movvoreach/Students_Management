@@ -25,6 +25,8 @@ class RoleSeeder extends Seeder
             'edit student',
             'view studentdetail',
             'view schedule',
+            'view profile',
+            'edit profile'
         ])->get();
 
         $teacherPermissions = Permission::whereIn('name', [
@@ -35,6 +37,8 @@ class RoleSeeder extends Seeder
             'view schedule',
             'create schedule',
             'edit schedule',
+            'view profile',
+            'edit profile'
         ])->get();
 
         // ADMIN → ALL

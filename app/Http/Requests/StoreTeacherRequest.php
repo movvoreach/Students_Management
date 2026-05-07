@@ -28,11 +28,11 @@ class StoreTeacherRequest extends FormRequest
         // Teacher basic info
         'teacher_code' => 'required|string|unique:teachers,teacher_code',
         'name'         => 'required|string|max:255',
-        'gender'       => 'nullable|in:Male,Female',
-        'dob'          => 'nullable|date',
-        'phone'        => 'nullable|string|max:20',
+        'gender'       => 'required|in:Male,Female',
+        'dob'          => 'required|date',
+        'phone'        => 'required|string|max:20',
         'email'        => 'required|email|unique:users,email|unique:teachers,email',
-        'password'     => 'nullable|string|min:6',
+        'password'     => 'required|string|min:6',
         'department'      => 'required|string|max:255',
         'image'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ];

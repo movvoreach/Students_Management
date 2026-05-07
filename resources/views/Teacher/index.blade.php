@@ -101,10 +101,10 @@
                             <div class="card-body">
                                 <div class="row g-2 align-items-center">
 
-                                    <!-- SUBJECT -->
+                                    <!-- Department -->
                                     <div class="col-md-4">
                                         <select class="form-control" name="department_id" onchange="this.form.submit()">
-                                            <option value="">Select Subject</option>
+                                            <option value="">Select Department</option>
                                             {{-- Assuming $teachers is a collection of Teacher models with department relationship --}}
                                             @foreach ($teachers->unique('department_id') as $teacher)
                                                 <option value="{{ $teacher->department_id }}"

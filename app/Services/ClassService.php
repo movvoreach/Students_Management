@@ -50,7 +50,7 @@ class ClassService
             $query->where('gender', $filters['gender']);
         }
 
-        $perPage = $filters['per_page'] ?? 10;
+        $perPage = $filters['per_page'] ?? 5;
 
         return $query->orderBy('id', 'desc')->paginate($perPage);
     }

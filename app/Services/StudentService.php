@@ -122,10 +122,8 @@ class StudentService
             });
         }
 
-        if (! empty($filters['class_id'])) {
-            $query->whereHas('enrollments', function ($q) use ($filters) {
-                $q->where('class_id', $filters['class_id']);
-            });
+        if (! empty($filters['department_id'])) {
+            $query->where('department_id', $filters['department_id']);
         }
 
         if (isset($filters['gender'])) {

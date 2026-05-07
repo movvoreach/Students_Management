@@ -26,7 +26,7 @@ class UpdateStudentRequest extends FormRequest
         $student = $this->route('student');
         return [
             //
-            'department_id' =>'required',
+            'department_id' =>'nullable',
             'student_code' => 'required|unique:students,student_code,' . $student->id,
             'name'         => 'required',
             'email'        => 'required|email|unique:students,email,' . $student->id,
