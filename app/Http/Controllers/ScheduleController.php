@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreScheduleRequest;
+use App\Http\Requests\UpdateScheduleRequest;
 use App\Models\Classroom;
 use App\Models\Department;
 use App\Models\Schedule;
@@ -222,28 +223,9 @@ class ScheduleController extends Controller
         return response()->json($schedule);
     }
 
-    public function update(Request $request, Schedule $schedule)
+    public function update(UpdateScheduleRequest $request, Schedule $schedule)
     {
-        $request->validate([
-            'department_id' => 'required|integer|exists:departments,id',
-            'subject_id'    => 'required|integer|exists:subjects,id',
-            'teacher_id'    => 'required|integer|exists:teachers,id',
-            'class_id'      => 'required|integer|exists:classes,id',
-            'day'           => 'required|string',
-            'start_time'    => 'required',
-            'end_time'      => 'required|after:start_time',
-        ]);
-
-        $schedule->update([
-            'department_id' => $request->department_id,
-            'subject_id'    => $request->subject_id,
-            'teacher_id'    => $request->teacher_id,
-            'class_id'      => $request->class_id,
-            'day'           => $request->day,
-            'start_time'    => $request->start_time,
-            'end_time'      => $request->end_time,
-        ]);
-
+        $this->scheduleService->updateSchedule($schedule, $request->validated());
         return redirect()->back()->with('success', 'Schedule updated successfully!');
     }
 

@@ -39,9 +39,23 @@
 
         <div class="container-fluid">
 
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert">
+                        &times;
+                    </button>
+
+                    {{ session('success') }}
+                </div>
+            @endif
+
             @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert">
+                        &times;
+                    </button>
+
+                    <ul class="mb-0">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -108,13 +122,13 @@
             <!-- TOP ACTION with combined filter form -->
             <form method="GET" action="{{ route('schedule.index') }}" class="mb-3">
                 <div class="row">
-                     @role('admin')
-                    <div class="col-md-3 mb-2"> {{-- Search input --}}
-                        <input type="text" name="search" class="form-control" placeholder="Search Schedule..."
-                            value="{{ request('search') }}">
-                    </div>
+                    @role('admin')
+                        <div class="col-md-3 mb-2"> {{-- Search input --}}
+                            <input type="text" name="search" class="form-control" placeholder="Search Schedule..."
+                                value="{{ request('search') }}">
+                        </div>
 
-                    {{-- @role('admin') --}}
+                        {{-- @role('admin') --}}
                         <div class="col-md-2 mb-2"> {{-- Department filter --}}
                             <select name="department_id" class="form-control" onchange="this.form.submit()">
                                 <option value="">All Departments</option>
@@ -436,7 +450,8 @@
                                                                                 @csrf
                                                                                 @method('DELETE')
 
-                                                                                <button type="submit" class="dropdown-item text-danger"
+                                                                                <button type="submit"
+                                                                                    class="dropdown-item text-danger"
                                                                                     onclick="return confirm('Delete this schedule?')">
 
                                                                                     <i class="fas fa-trash me-2"></i>
