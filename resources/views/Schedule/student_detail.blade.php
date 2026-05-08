@@ -76,7 +76,7 @@
                             <div class="p-2">
                                 <small class="text-muted d-block">Class</small>
                                 <div class="fw-semibold text-dark">
-                                    {{ $student->class ?? 'Class A' }}
+                                    {{ $student->class->class_name ?? 'No Class Assigned' }}
                                 </div>
                             </div>
                         </div>

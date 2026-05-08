@@ -1,13 +1,7 @@
 <?php
 namespace App\Services;
-
-use App\Models\Classroom;
-use App\Models\Department;
 use App\Models\Schedule;
 use App\Models\ScheduleStudent;
-use App\Models\Student;
-use App\Models\Subject;
-use App\Models\Teacher;
 
 class ScheduleService
 {

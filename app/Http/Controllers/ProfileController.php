@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,7 +13,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = User::with(['student', 'teacher'])
-            ->find(auth()->id());
+            ->find(Auth::id());
 
         return view('Profile.index', compact('user'));
     }
@@ -20,7 +21,7 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
 
-        $user = User::with(['student', 'teacher'])->find(auth()->id());
+        $user = User::with(['student', 'teacher'])->find(Auth::id());
 
         // Validate form data
         $request->validate([
@@ -84,7 +85,7 @@ class ProfileController extends Controller
 
         // Redirect back with success message
         return redirect()
-            ->route('profile.show', auth()->id())
+            ->route('profile.show', Auth::id())
             ->with('success', 'Profile updated successfully.');
     }
     public function updatePassword(Request $request)
@@ -96,14 +97,14 @@ class ProfileController extends Controller
             'password_confirmation' => 'required|min:6',
         ]);
         // dd($request->all());
-        $user = User::find(auth()->id());
+        $user = User::find(Auth::id());
 
         $currentPassword = Hash::check($request->current_password, $user->password);
         if (! $currentPassword) {
-            return redirect()->route('profile.show', auth()->id())->withErrors(['current_password' => 'Current password is incorrect.']);
+            return redirect()->route('profile.show', Auth::id())->withErrors(['current_password' => 'Current password is incorrect.']);
         }
         if ($request->new_password !== $request->password_confirmation) {
-            return redirect()->route('profile.show', auth()->id())->withErrors(['new_password' => 'New password and confirmation do not match.']);
+            return redirect()->route('profile.show', Auth::id())->withErrors(['new_password' => 'New password and confirmation do not match.']);
         }
         $user->password = Hash::make($request->new_password);
         $user->save();
@@ -111,7 +112,7 @@ class ProfileController extends Controller
         // Update password
 
         return redirect()
-            ->route('profile.show', auth()->id())
+            ->route('profile.show', Auth::id())
             ->with('success', 'Password updated successfully.');
     }
 }
