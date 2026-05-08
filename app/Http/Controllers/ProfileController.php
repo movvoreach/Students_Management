@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
+
     //
     public function index()
     {
@@ -19,7 +20,7 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        // Get logged-in user with student/teacher relations
+
         $user = User::with(['student', 'teacher'])->find(auth()->id());
 
         // Validate form data

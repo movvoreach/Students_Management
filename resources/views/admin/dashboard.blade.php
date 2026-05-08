@@ -54,77 +54,7 @@
     <section class="content">
         <div class="container-fluid">
 
-            <!-- FILTER -->
-            <div class="row mb-3">
-                <div class="col-12">
-                    <div class="card card-outline card-primary collapsed-card">
-                        <div class="card-header">
-                            <h3 class="card-title"><i class="fas fa-filter"></i> Filter Students</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
 
-                        <div class="card-body" style="display:none;">
-                            <form>
-                                <div class="row">
-
-                                    <div class="col-md-3">
-                                        <label>Class</label>
-                                        <select class="form-control form-control-sm">
-                                            <option>All Classes</option>
-                                            <option>Year 1</option>
-                                            <option>Year 2</option>
-                                            <option>Year 3</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label>Department</label>
-                                        <select class="form-control form-control-sm">
-                                            <option>All Departments</option>
-                                            <option>IT</option>
-                                            <option>Business</option>
-                                            <option>Engineering</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label>Status</label>
-                                        <select class="form-control form-control-sm">
-                                            <option>All</option>
-                                            <option>Active</option>
-                                            <option>Inactive</option>
-                                            <option>Graduated</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label>Gender</label>
-                                        <select class="form-control form-control-sm">
-                                            <option>All</option>
-                                            <option>Male</option>
-                                            <option>Female</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-
-                                <div class="mt-3">
-                                    <button class="btn btn-primary btn-sm">
-                                        <i class="fas fa-search"></i> Apply Filter
-                                    </button>
-                                    <button class="btn btn-secondary btn-sm">
-                                        Reset
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- STATS ROW 1 -->
             <div class="row">
@@ -132,7 +62,7 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>850</h3>
+                            <h3>{{ $studentsCount }}</h3>
                             <p>Total Students</p>
                         </div>
                         <div class="icon">
@@ -144,8 +74,8 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>720</h3>
-                            <p>Active Students</p>
+                            <h3>{{ $classesCount }}</h3>
+                            <p>Total Classes</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-user-check"></i>
@@ -156,8 +86,8 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>95%</h3>
-                            <p>Attendance Rate</p>
+                            <h3>{{ $enrollmentCount }}</h3>
+                            <p>Total Enrollment</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-calendar-check"></i>
@@ -168,8 +98,8 @@
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-danger">
                         <div class="inner">
-                            <h3>45</h3>
-                            <p>New Admissions</p>
+                            <h3>{{ $totalSchedules }}</h3>
+                            <p>Total Schedules</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-user-plus"></i>
@@ -187,7 +117,7 @@
                         <span class="info-box-icon bg-primary"><i class="fas fa-school"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">Classes</span>
-                            <span class="info-box-number">24</span>
+                            <span class="info-box-number">{{ $classesCount }}</span>
                         </div>
                     </div>
                 </div>
@@ -197,7 +127,7 @@
                         <span class="info-box-icon bg-info"><i class="fas fa-chalkboard-teacher"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">Teachers</span>
-                            <span class="info-box-number">35</span>
+                            <span class="info-box-number">{{ $teachersCount }}</span>
                         </div>
                     </div>
                 </div>
@@ -206,8 +136,8 @@
                     <div class="info-box">
                         <span class="info-box-icon bg-warning"><i class="fas fa-book"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Courses</span>
-                            <span class="info-box-number">18</span>
+                            <span class="info-box-text">Subjects</span>
+                            <span class="info-box-number">{{ $tatalSubject }}</span>
                         </div>
                     </div>
                 </div>
@@ -216,8 +146,8 @@
                     <div class="info-box">
                         <span class="info-box-icon bg-success"><i class="fas fa-chart-line"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Monthly Growth</span>
-                            <span class="info-box-number">+12%</span>
+                            <span class="info-box-text"> Total Departments</span>
+                            <span class="info-box-number">{{ $totalDepartment }}</span>
                         </div>
                     </div>
                 </div>

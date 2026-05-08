@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\DashbordsController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScheduleController;
@@ -23,9 +24,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 | Dashboard
 |--------------------------------------------------------------------------
 */
-Route::get('/', fn() => view('admin.dashboard'))
+Route::get('/', [DashbordsController::class, 'index'])
     ->name('dashboard')
     ->middleware(['auth']);
+// Route::get('/', fn() => view('admin.dashboard'))
+//     ->name('dashboard')
+//     ->middleware(['auth']);
 
 /*
 |--------------------------------------------------------------------------
