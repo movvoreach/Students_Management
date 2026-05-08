@@ -138,7 +138,7 @@ class ScheduleController extends Controller
 
         $subjects = Subject::all();
 
-        return view('Schedule.index', compact(
+        return view('schedule.index', compact(
             'schedules',
             'time',
             'departments',
@@ -153,10 +153,10 @@ class ScheduleController extends Controller
 
     public function store(StoreScheduleRequest $request)
     {
-        // dd($request->all());
         $this->scheduleService->createSchedule($request->validated());
         return back()->with('success', 'Schedule created successfully!');
     }
+
     public function viewClass($id)
     {
         $schedule = Schedule::with(['class', 'teacher', 'students'])->findOrFail($id);
@@ -165,13 +165,11 @@ class ScheduleController extends Controller
 
         return view('Schedule.view_class', compact('schedule', 'students'));
     }
-    public function showClass($id)
+
+    public function show(Schedule $schedule)
     {
-        $schedule = Schedule::with(['class', 'teacher', 'students'])->findOrFail($id);
-
-        $students = $schedule->students;
-
-        return view('Class.show', compact('schedule', 'students'));
+        // $schedule = Schedule::with(['class', 'teacher', 'students'])->findOrFail($id);
+        return view('schedule.show', compact('schedule'));
     }
 
     public function destroy($id)
@@ -181,8 +179,11 @@ class ScheduleController extends Controller
 
         return redirect()->back()->with('success', 'Schedule deleted successfully');
     }
-    public function removeStudent($scheduleId, $studentId)
+
+    // Unenroll student from schedule
+    public function unEnrollStudent($scheduleId, $studentId)
     {
+        dd($scheduleId, $studentId);
         // Find schedule
         $schedule = Schedule::findOrFail($scheduleId);
 

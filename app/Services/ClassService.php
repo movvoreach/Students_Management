@@ -2,9 +2,15 @@
 namespace App\Services;
 
 use App\Models\Classroom;
+use App\Models\Student;
 
 class ClassService
 {
+    /**
+     * create a new classroom
+     * @param array $data
+     * @return Classroom
+     */
     public function store(array $data)
     {
         $class = Classroom::create([
@@ -15,19 +21,25 @@ class ClassService
         ]);
         return $class;
     }
-    public function updateStudents($Student, array $data)
+
+    /**
+     * update classroom data
+     * @param Classroom $class
+     * @param array $data
+     * @return Classroom
+     */
+    public function update(Classroom $class, array $data)
     {
-        // dd($Student);
-        $Student->update([
+        $class->update([
             'class_name' => $data['class_name'],
             'table'      => $data['table'],
             'status'     => $data['status'],
         ]);
-        return $Student;
+        return $class;
     }
+
     public function getWithsearchFilters($filters = [])
     {
-        // dd($filters);
         $query = Classroom::query();
 
         // SEARCH
