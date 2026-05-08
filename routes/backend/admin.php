@@ -66,7 +66,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{id}', [TeacherController::class, 'update'])->name('update')->middleware('permission:edit teacher');
         Route::delete('/{id}', [TeacherController::class, 'destroy'])->name('destroy')->middleware('permission:delete teacher');
     });
-
+    //Departments
+    Route::resource('departments', DepartmentController::class)->middleware('permission:view department');
+    // Subjects
+    Route::resource('subjects', SubjectController::class)->middleware('permission:view subject');
 
     // Schedules
      Route::group([

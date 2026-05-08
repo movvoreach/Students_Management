@@ -150,6 +150,22 @@
                             </a>
                         </li>
                     @endcan
+                    @can('view department')
+                        <li class="nav-item">
+                            <a href="{{ route('departments.index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-building"></i>
+                                <p>Departments</p>
+                            </a>
+                        </li>
+                    @endcan
+                    @can('view subject')
+                        <li class="nav-item">
+                            <a href="{{ route('subjects.index') }}" class="nav-link"></a>
+                                <i class="nav-icon fas fa-book-open"></i>
+                                <p>Subjects</p>
+                            </a>
+                        </li>
+                    @endcan
                 @endif
 
             </ul>
