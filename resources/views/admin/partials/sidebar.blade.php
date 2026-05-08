@@ -27,7 +27,8 @@
                 <!-- USER PANEL -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="{{ $profileImage }}" class="img-circle" style="width:40px; height:35px; object-fit: cover;">
+                        <img src="{{ $profileImage }}" class="img-circle"
+                            style="width:40px; height:35px; object-fit: cover;">
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">Welcome: {{ Auth::user()->name ?? 'User' }}</a>

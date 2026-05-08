@@ -3,40 +3,53 @@
 @section('title', 'Roles & Permissions')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('backend') }}/plugins/fontawesome-free/css/all.min.css">
-<style>
-    .role-card { border-radius: 12px; overflow: hidden; }
-    .role-icon{
-        width: 50px; height: 50px;
-        border-radius: 12px;
-        display:flex; align-items:center; justify-content:center;
-        font-size: 20px;
-    }
-    .permission-badge{
-        display:inline-block;
-        background:#f1f3f5;
-        border:1px solid #e9ecef;
-        color:#343a40;
-        padding:6px 10px;
-        border-radius:999px;
-        font-size:12px;
-        margin: 3px 4px 0 0;
-        white-space: nowrap;
-    }
-    .permission-badge.bg-secondary{ border-color:transparent; }
-    .permission-category{
-        border:1px solid #eee;
-        border-radius:12px;
-        padding:12px;
-        margin-bottom:12px;
-        background:#fff;
-    }
-    .permission-category h6{
-        font-weight:700;
-        margin-bottom:10px;
-        color:#2e306f;
-    }
-</style>
+    <link rel="stylesheet" href="{{ asset('backend') }}/plugins/fontawesome-free/css/all.min.css">
+    <style>
+        .role-card {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .role-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .permission-badge {
+            display: inline-block;
+            background: #f1f3f5;
+            border: 1px solid #e9ecef;
+            color: #343a40;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            margin: 3px 4px 0 0;
+            white-space: nowrap;
+        }
+
+        .permission-badge.bg-secondary {
+            border-color: transparent;
+        }
+
+        .permission-category {
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #fff;
+        }
+
+        .permission-category h6 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2e306f;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -117,9 +130,16 @@
                         $iconBg = 'bg-secondary';
                         $badgeClass = 'badge-secondary';
 
-                        if(str_contains($name,'admin')) { $iconBg='bg-danger'; $badgeClass='badge-danger'; }
-                        elseif(str_contains($name,'staff')) { $iconBg='bg-info'; $badgeClass='badge-info'; }
-                        elseif(str_contains($name,'guest')) { $iconBg='bg-success'; $badgeClass='badge-success'; }
+                        if (str_contains($name, 'admin')) {
+                            $iconBg = 'bg-danger';
+                            $badgeClass = 'badge-danger';
+                        } elseif (str_contains($name, 'staff')) {
+                            $iconBg = 'bg-info';
+                            $badgeClass = 'badge-info';
+                        } elseif (str_contains($name, 'guest')) {
+                            $iconBg = 'bg-success';
+                            $badgeClass = 'badge-success';
+                        }
 
                         $permCount = $role->permissions->count();
                         $previewPerms = $role->permissions->pluck('name')->take(8);
@@ -156,16 +176,16 @@
                                 </div>
 
                                 <div class="permissions-preview" style="max-height:150px; overflow-y:auto;">
-                                    @if($permCount == 0)
+                                    @if ($permCount == 0)
                                         <span class="text-muted">No permissions</span>
                                     @else
-                                        @foreach($previewPerms as $p)
+                                        @foreach ($previewPerms as $p)
                                             <span class="permission-badge">
                                                 <i class="fas fa-check text-success"></i> {{ $p }}
                                             </span>
                                         @endforeach
 
-                                        @if($moreCount > 0)
+                                        @if ($moreCount > 0)
                                             <span class="permission-badge bg-secondary text-white">
                                                 +{{ $moreCount }} more
                                             </span>
@@ -208,19 +228,19 @@
                 <div class="card-body">
                     @php
                         // Group permissions by prefix before dot (ex: bookings.create -> bookings)
-                        $grouped = collect($permissions ?? [])->groupBy(function($p){
+                        $grouped = collect($permissions ?? [])->groupBy(function ($p) {
                             $name = is_object($p) ? $p->name : $p;
                             return explode('.', $name)[0] ?? 'other';
                         });
                     @endphp
 
                     <div class="row">
-                        @foreach($grouped as $group => $perms)
+                        @foreach ($grouped as $group => $perms)
                             <div class="col-md-6">
                                 <div class="permission-category">
                                     <h6><i class="fas fa-folder-open"></i> {{ ucfirst($group) }}</h6>
 
-                                    @foreach($perms as $perm)
+                                    @foreach ($perms as $perm)
                                         @php $permName = is_object($perm) ? $perm->name : $perm; @endphp
                                         <span class="permission-badge">
                                             <i class="fas fa-key text-warning"></i> {{ $permName }}
@@ -252,7 +272,7 @@
 
                         // Build map: roleId => permission names array
                         $rolePermMap = [];
-                        foreach($roleList as $r){
+                        foreach ($roleList as $r) {
                             $rolePermMap[$r->id] = $r->permissions->pluck('name')->toArray();
                         }
                     @endphp
@@ -261,13 +281,17 @@
                         <thead>
                             <tr>
                                 <th>Permission</th>
-                                @foreach($roleList as $r)
+                                @foreach ($roleList as $r)
                                     @php
                                         $n = strtolower($r->name);
                                         $badge = 'badge-secondary';
-                                        if(str_contains($n,'admin')) $badge='badge-danger';
-                                        elseif(str_contains($n,'staff')) $badge='badge-info';
-                                        elseif(str_contains($n,'guest')) $badge='badge-success';
+                                        if (str_contains($n, 'admin')) {
+                                            $badge = 'badge-danger';
+                                        } elseif (str_contains($n, 'staff')) {
+                                            $badge = 'badge-info';
+                                        } elseif (str_contains($n, 'guest')) {
+                                            $badge = 'badge-success';
+                                        }
                                     @endphp
                                     <th class="text-center">
                                         <span class="badge {{ $badge }} px-3 py-2 text-capitalize">
@@ -278,17 +302,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($permList as $perm)
+                            @foreach ($permList as $perm)
                                 @php $permName = is_object($perm) ? $perm->name : $perm; @endphp
                                 <tr>
                                     <td><strong>{{ $permName }}</strong></td>
 
-                                    @foreach($roleList as $r)
+                                    @foreach ($roleList as $r)
                                         @php
                                             $has = in_array($permName, $rolePermMap[$r->id] ?? []);
                                         @endphp
                                         <td class="text-center">
-                                            @if($has)
+                                            @if ($has)
                                                 <i class="fas fa-check-circle text-success fa-lg"></i>
                                             @else
                                                 <i class="fas fa-times-circle text-danger fa-lg"></i>

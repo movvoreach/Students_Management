@@ -2,11 +2,9 @@
 namespace App\Services;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
 
 class UserService
 {
-
 
     public function store(array $data): User
     {
@@ -27,8 +25,6 @@ class UserService
 
     //     $this->uploadProfileImage($request, $user);
     // }
-
-
 
     // public function uploadProfileImage($request, $user)
     // {

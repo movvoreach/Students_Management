@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -25,12 +24,12 @@ class StoreScheduleRequest extends FormRequest
         return [
             //
             'department_id' => 'required',
-            'subject_id' =>'required',
-            'teacher_id' => 'required',
-            'class_id'   => 'required',
-            'day'        => 'required',
-            'start_time' => 'required',
-            'end_time'   => 'required',
+            'subject_id'    => 'required',
+            'teacher_id'    => 'required',
+            'class_id'      => 'required',
+            'day'           => 'required',
+            'start_time'    => 'required',
+            'end_time'      => 'required',
         ];
     }
 }

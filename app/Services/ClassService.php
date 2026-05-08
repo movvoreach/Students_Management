@@ -2,12 +2,10 @@
 namespace App\Services;
 
 use App\Models\Classroom;
-use Illuminate\Http\Request;
-use PhpParser\Builder\Class_;
 
 class ClassService
 {
-     public function store(array $data)
+    public function store(array $data)
     {
         $class = Classroom::create([
 
@@ -27,7 +25,7 @@ class ClassService
         ]);
         return $Student;
     }
-     public function getWithsearchFilters($filters = [])
+    public function getWithsearchFilters($filters = [])
     {
         // dd($filters);
         $query = Classroom::query();
@@ -41,9 +39,8 @@ class ClassService
             });
         }
 
-
-        if (!empty($filters['status'])) {
-           $query->where('status', $filters['status']);
+        if (! empty($filters['status'])) {
+            $query->where('status', $filters['status']);
         }
 
         if (isset($filters['gender'])) {
@@ -55,7 +52,4 @@ class ClassService
         return $query->orderBy('id', 'desc')->paginate($perPage);
     }
 
-
 }
-
-

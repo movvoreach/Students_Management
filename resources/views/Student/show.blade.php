@@ -137,7 +137,7 @@
 
                     <strong>Class List</strong>
 
-                   
+
                 </div>
 
                 <div class="card-body">

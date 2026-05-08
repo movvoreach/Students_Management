@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -24,10 +23,10 @@ class UpdateClassRequest extends FormRequest
     {
         return [
             //
-             'department_id' => 'required|string|max:255',
-            'class_name' => 'required|string|max:255',
-            'table'      => 'required|string|max:255',
-            'status'     => 'required|in:active,inactive',
+            'department_id' => 'required|string|max:255',
+            'class_name'    => 'required|string|max:255',
+            'table'         => 'required|string|max:255',
+            'status'        => 'required|in:active,inactive',
         ];
     }
 }

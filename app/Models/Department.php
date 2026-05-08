@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Override;
 
 class Department extends Model
 {
@@ -12,7 +10,7 @@ class Department extends Model
 
     protected $fillable = [
         'department_name',
-        'time'
+        'time',
     ];
 
 }

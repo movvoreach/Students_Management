@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
@@ -26,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         DB::listen(function ($query) {
             Log::info($query->sql, [
                 'bindings' => $query->bindings,
-                'time' => $query->time,
+                'time'     => $query->time,
             ]);
         });
     }

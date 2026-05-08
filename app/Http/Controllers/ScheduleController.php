@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEnrollmentRequest;
 use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Requests\UpdateScheduleRequest;
 use App\Models\Classroom;
@@ -23,6 +24,12 @@ class ScheduleController extends Controller
     {
         $this->scheduleService = new ScheduleService();
     }
+    public function storeEnrollment(StoreEnrollmentRequest $request)
+    {
+        $this->scheduleService->enrollStudent($request->validated());
+
+        return redirect()->back()->with('success', 'Student enrolled successfully');
+    }
 
     public function index(Request $request)
     {
@@ -33,7 +40,6 @@ class ScheduleController extends Controller
             'class',
             'subject',
         ])->withCount('students');
-
 
         if ($user->hasRole('teacher')) {
 
@@ -53,9 +59,7 @@ class ScheduleController extends Controller
                 ->getWithsearchFilters($request->all(), $user);
         }
 
-
         $query->orderByRaw('TIME(start_time) ASC');
-
 
         if ($user->hasRole('admin')) {
 
@@ -71,7 +75,6 @@ class ScheduleController extends Controller
             $scheduleCollection = $data;
         }
 
-
         $days = [
             'Monday',
             'Tuesday',
@@ -79,7 +82,6 @@ class ScheduleController extends Controller
             'Thursday',
             'Friday',
         ];
-
 
         $time = Schedule::query()
 
@@ -107,7 +109,6 @@ class ScheduleController extends Controller
 
             ->get();
 
-
         $schedules = [];
 
         foreach ($time as $pkey => $t) {
@@ -127,7 +128,6 @@ class ScheduleController extends Controller
             }
         }
 
-
         $departments = Department::all();
 
         $teachers = Teacher::select('id', 'name')->get();
@@ -137,7 +137,6 @@ class ScheduleController extends Controller
         $students = Student::select('id', 'name')->get();
 
         $subjects = Subject::all();
-
 
         return view('Schedule.index', compact(
             'schedules',
@@ -211,10 +210,6 @@ class ScheduleController extends Controller
         $teachers = Teacher::where('department_id', $departmentId)->get();
         return response()->json($teachers);
     }
-
-    // app/Http/Controllers/ScheduleController.php
-
-// ... (your existing imports and index method)
 
     public function edit(Schedule $schedule)
     {

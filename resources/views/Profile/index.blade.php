@@ -128,7 +128,7 @@
                         } elseif ($user->image) {
                             $profileImage1 = asset('storage/' . $user->image);
                             // dd($user->image);
-                                // : asset('backend/dist/img/user2-160x160.jpg');
+                            // : asset('backend/dist/img/user2-160x160.jpg');
                         }
                     @endphp
 

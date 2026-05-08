@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Models\Classroom;
 use App\Models\Department;
 use App\Models\Schedule;
+use App\Models\ScheduleStudent;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
@@ -148,9 +149,6 @@ class ScheduleService
         return $schedules;
     }
 
-
-
-
     // My Controller code
 
     public function index(Request $request)
@@ -176,22 +174,30 @@ class ScheduleService
 
         // $dropdown = $this->scheduleService->getWithSelectData();
         $departments = Department::all();
-        $teachers = Teacher::select('id', 'name')->get();
-        $classes = Classroom::select('id', 'class_name')->get();
-        $students = Student::select('id', 'name')->get();
-        $subjects = Subject::all();
+        $teachers    = Teacher::select('id', 'name')->get();
+        $classes     = Classroom::select('id', 'class_name')->get();
+        $students    = Student::select('id', 'name')->get();
+        $subjects    = Subject::all();
         return view('Schedule.index', array_merge([
-            'schedules' => $schedules,
-            'time'      => $time,
-            'days'      => $days,
-            'data'      => $data,
+            'schedules'   => $schedules,
+            'time'        => $time,
+            'days'        => $days,
+            'data'        => $data,
             'departments' => $departments,
-            'teachers' => $teachers,
-            'classes' => $classes,
-            'students' => $students,
-            'subjects' => $subjects,
+            'teachers'    => $teachers,
+            'classes'     => $classes,
+            'students'    => $students,
+            'subjects'    => $subjects,
         ]));
     }
 
+    public function enrollStudent(array $data = [])
+    {
+        $ScheduleStudent = ScheduleStudent::create([
+            'student_id'  => $data['student_id'],
+            'schedule_id' => $data['schedule_id'],
+        ]);
+        return $ScheduleStudent;
+    }
 
 }

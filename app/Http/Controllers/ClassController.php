@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreClassRequest;
 use App\Http\Requests\UpdateClassRequest;
 use App\Models\Classroom;
-use App\Models\Department;
-use App\Models\Schedule;
 use App\Services\ClassService;
 
 class ClassController extends Controller
@@ -68,12 +66,10 @@ class ClassController extends Controller
     {
         $class = Classroom::findOrFail($id);
 
-       $scheduleInClass = Classroom::join('schedules', 'classes.id', '=', 'schedules.class_id')
-        ->where('classes.id', $id)->get();
+        $scheduleInClass = Classroom::join('schedules', 'classes.id', '=', 'schedules.class_id')
+            ->where('classes.id', $id)->get();
 
-        return view('Class.show', compact('class' ,'scheduleInClass'));
+        return view('Class.show', compact('class', 'scheduleInClass'));
     }
-
-
 
 }

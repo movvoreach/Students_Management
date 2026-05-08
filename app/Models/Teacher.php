@@ -18,7 +18,7 @@ class Teacher extends Model
         // 'subject',
         'image',
     ];
-        public function user()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
@@ -26,7 +26,7 @@ class Teacher extends Model
     {
         return $this->hasMany(Schedule::class, 'teacher_id');
     }
-     public function department()
+    public function department()
     {
         // Assumes 'department_id' is in the teachers table
         return $this->belongsTo(Department::class);

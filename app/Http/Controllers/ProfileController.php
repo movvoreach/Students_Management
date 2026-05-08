@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Storage;
 class ProfileController extends Controller
 {
 
-    //
     public function index()
     {
         $user = User::with(['student', 'teacher'])

@@ -3,7 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\DashbordsController;
-use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StudentController;
@@ -101,7 +100,8 @@ Route::middleware(['auth', 'role:teacher|student|admin'])->group(function () {
         ->name('schedule.removeStudent')
         ->middleware('permission:edit schedule');
 
-    Route::post('/schedule/enroll/students', [EnrollmentController::class, 'store'])
+    // AJAX for enrollment
+    Route::post('/schedule/enroll/students', [ScheduleController::class, 'storeEnrollment'])
         ->name('enrollment.store')
         ->middleware('permission:create schedule');
 

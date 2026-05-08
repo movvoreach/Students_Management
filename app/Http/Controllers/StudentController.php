@@ -40,7 +40,7 @@ class StudentController extends Controller
         $scheduleId         = $request->query('schedule_id');
         $studentsInSchedule = DB::table('schedule_students')->where('schedule_id', $scheduleId)->pluck('student_id', 'id')->toArray();
         $students           = Student::whereNotIn('id', $studentsInSchedule)->get();
-        // $getDepartmentid = Department::Whare('')
+
         $data = [];
         foreach ($students as $student) {
             $data[] = [
@@ -68,10 +68,9 @@ class StudentController extends Controller
     }
     public function edit(Student $student)
     {
-         $departments = Department::all();
+        $departments = Department::all();
         return view('Student.edit', compact('student', 'departments'));
     }
-
 
     public function update(UpdateStudentRequest $request, Student $student)
     {
