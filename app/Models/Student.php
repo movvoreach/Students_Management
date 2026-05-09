@@ -1,9 +1,5 @@
 <?php
-
 namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Classroom;
 
 namespace App\Models;
 
@@ -44,7 +40,7 @@ class Student extends Model
 
     public function classes()
     {
-        return $this->belongsToMany(Classroom::class, 'enrollments', 'student_id', 'class_id','schedule_students','schedule_id');
+        return $this->belongsToMany(Classroom::class, 'enrollments', 'student_id', 'class_id', 'schedule_students', 'schedule_id');
     }
     public function enrollments()
     {
@@ -55,13 +51,13 @@ class Student extends Model
     {
         return $this->hasMany(ScheduleStudent::class, 'student_id');
     }
-     public function department()
+    public function department()
     {
         // Assumes 'department_id' is in the teachers table
         return $this->belongsTo(Department::class);
     }
     public function user()
-{
-    return $this->belongsTo(User::class);
-}
+    {
+        return $this->belongsTo(User::class);
+    }
 }

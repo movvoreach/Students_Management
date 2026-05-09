@@ -420,7 +420,7 @@
                                                                     <li>
 
                                                                         <a class="dropdown-item"
-                                                                            href="{{ route('schedule.viewClass', $schedule->id) }}">
+                                                                            href="{{ route('schedule.show', $schedule->id) }}">
 
                                                                             <i class="fa fa-eye text-info me-2"></i>
 

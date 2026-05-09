@@ -200,7 +200,7 @@
                                 <td>{{ $item->day }}</td>
                                 <td>
                                     <!-- Action Buttons -->
-                                    <a href="{{ route('schedule.viewClass', $item->id) }}" class="btn btn-sm btn-primary">
+                                    <a href="{{ route('schedule.show', $item->id) }}" class="btn btn-sm btn-primary">
                                         View
                                     </a>
 

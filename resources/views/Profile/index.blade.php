@@ -75,6 +75,9 @@
                     // dd($user->student->image);
                 } elseif ($user->teacher && $user->teacher->image) {
                     $profileImage = asset('storage/' . $user->teacher->image);
+                } elseif ($user->image) {
+                    // dd($user->image);
+                    $profileImage = asset('storage/' . $user->image);
                 }
             @endphp
 
@@ -116,16 +119,16 @@
                     @php
                         $user = auth()->user();
 
-                        $profileImage = asset('backend/dist/img/user2-160x160.jpg');
+                        // $profileImage = asset('backend/dist/img/user2-160x160.jpg');
 
                         if ($user->student && $user->student->image) {
                             $profileImage = asset('storage/' . $user->student->image);
                         } elseif ($user->teacher && $user->teacher->image) {
                             $profileImage = asset('storage/' . $user->teacher->image);
-                        } else {
-                            $profileImage = $user->image
-                                ? asset('storage/' . $user->image)
-                                : asset('backend/dist/img/user2-160x160.jpg');
+                        } elseif ($user->image) {
+                            $profileImage1 = asset('storage/' . $user->image);
+                            // dd($user->image);
+                            // : asset('backend/dist/img/user2-160x160.jpg');
                         }
                     @endphp
 

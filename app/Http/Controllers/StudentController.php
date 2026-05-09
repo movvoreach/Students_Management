@@ -23,24 +23,16 @@ class StudentController extends Controller
     // Add $id to the signature and handle potential missing filters
     public function index(Request $request)
     {
-
         $students = $this->studentService->getWithsearchFilters($request->all());
-
-        $student = Student::with(['schedules.class'])->get();
-        // dd($student);
-        $classes = Classroom::all();
-
-        return view('Student.index', compact('students', 'classes', 'student'));
+        return view('student.index', compact('students'));
     }
 
     public function checkStudent(Request $request)
     {
-        // dd($request->all());
-
         $scheduleId         = $request->query('schedule_id');
         $studentsInSchedule = DB::table('schedule_students')->where('schedule_id', $scheduleId)->pluck('student_id', 'id')->toArray();
         $students           = Student::whereNotIn('id', $studentsInSchedule)->get();
-        // $getDepartmentid = Department::Whare('')
+
         $data = [];
         foreach ($students as $student) {
             $data[] = [
@@ -49,7 +41,6 @@ class StudentController extends Controller
             ];
         }
         return response()->json($data);
-        // dd($students);
     }
     public function create()
     {
@@ -68,10 +59,9 @@ class StudentController extends Controller
     }
     public function edit(Student $student)
     {
-         $departments = Department::all();
+        $departments = Department::all();
         return view('Student.edit', compact('student', 'departments'));
     }
-
 
     public function update(UpdateStudentRequest $request, Student $student)
     {

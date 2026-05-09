@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreClassRequest;
 use App\Http\Requests\UpdateClassRequest;
 use App\Models\Classroom;
-use App\Models\Department;
-use App\Models\Schedule;
 use App\Services\ClassService;
 
 class ClassController extends Controller
@@ -22,13 +20,13 @@ class ClassController extends Controller
     public function index()
     {
         $classes = $this->classService->getWithsearchFilters(request()->all());
-        return view('Class.index', compact('classes'));
+        return view('class.index', compact('classes'));
     }
 
     // Show create form
     public function create()
     {
-        return view('Class.create');
+        return view('class.create');
     }
 
     // Store new class
@@ -43,14 +41,13 @@ class ClassController extends Controller
     public function edit($id)
     {
         $class = Classroom::findOrFail($id);
-        return view('Class.edit', compact('class'));
+        return view('class.edit', compact('class'));
     }
 
     // Update class
-    public function update(UpdateClassRequest $request, $id)
+    public function update(UpdateClassRequest $request, Classroom $classroom)
     {
-        $this->classService->updateStudents(Classroom::findOrFail($id), $request->validated());
-
+        $this->classService->update($classroom, $request->validated());
         return redirect()->route('classes.index')->with('success', 'Class updated successfully!');
     }
 
@@ -68,12 +65,10 @@ class ClassController extends Controller
     {
         $class = Classroom::findOrFail($id);
 
-       $scheduleInClass = Classroom::join('schedules', 'classes.id', '=', 'schedules.class_id')
-        ->where('classes.id', $id)->get();
+        $scheduleInClass = Classroom::join('schedules', 'classes.id', '=', 'schedules.class_id')
+            ->where('classes.id', $id)->get();
 
-        return view('Class.show', compact('class' ,'scheduleInClass'));
+        return view('class.show', compact('class', 'scheduleInClass'));
     }
-
-
 
 }

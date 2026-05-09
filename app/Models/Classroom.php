@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Classroom extends Model
 {
-    //
+//
     protected $table = 'classes';
 
     protected $fillable = [
@@ -28,9 +28,9 @@ class Classroom extends Model
     {
         return $this->hasMany(Enrollment::class, 'class_id');
     }
-     public function department() {
-    return $this->belongsTo(Department::class);
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
-
 
 }

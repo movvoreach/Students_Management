@@ -137,7 +137,7 @@
 
                     <strong>Class List</strong>
 
-                   
+
                 </div>
 
                 <div class="card-body">
@@ -200,7 +200,7 @@
                                     {{-- ACTION --}}
                                     <td class="text-center">
 
-                                        <a href="{{ route('schedule.viewClass', $schedule->id) }}"
+                                        <a href="{{ route('schedule.show', $schedule->id) }}"
                                             class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
                                         </a>

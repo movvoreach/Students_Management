@@ -40,9 +40,19 @@ class PermissionsSeeder extends Seeder
 
             ['name' => 'view profile', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'edit profile', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
-            // ['name' => 'edit profile', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
 
-
+            //Department
+            ['name' => 'view department', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'create department', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'edit department', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'delete department', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'view departmentdetail', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            //Subject
+            ['name' => 'view subject', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'create subject', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'edit subject', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'delete subject', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'view subjectdetail', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

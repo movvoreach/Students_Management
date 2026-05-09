@@ -3,18 +3,18 @@
 @section('title', 'Permissions')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('backend') }}/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('backend') }}/plugins/fontawesome-free/css/all.min.css">
 
-<style>
-    .permission-name-badge{
-        font-size: 13px;
-        padding: 6px 10px;
-        border-radius: 6px;
-        background: #6c757d;
-        color: #fff;
-        display: inline-block;
-    }
-</style>
+    <style>
+        .permission-name-badge {
+            font-size: 13px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: #6c757d;
+            color: #fff;
+            display: inline-block;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -83,9 +83,8 @@
 
                                         <td class="text-center">
                                             <form action="{{ route('admin.permissions.destroy', $permission->id) }}"
-                                                  method="POST"
-                                                  class="d-inline"
-                                                  onsubmit="return confirm('Are you sure you want to delete this permission?');">
+                                                method="POST" class="d-inline"
+                                                onsubmit="return confirm('Are you sure you want to delete this permission?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm" title="Delete">
@@ -107,7 +106,7 @@
                     </div>
                 </div>
 
-                @if(method_exists($permissions, 'links'))
+                @if (method_exists($permissions, 'links'))
                     <div class="card-footer clearfix">
                         {{ $permissions->links() }}
                     </div>

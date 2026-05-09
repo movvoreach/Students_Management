@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEnrollmentRequest;
 use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Requests\UpdateScheduleRequest;
 use App\Models\Classroom;
@@ -16,32 +17,26 @@ use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
 {
-    /**
-     * Display list
-     */
-    protected $scheduleService;
+    protected ScheduleService $scheduleService;
 
-    public function __construct()
+    public function __construct(ScheduleService $scheduleService)
     {
-        $this->scheduleService = new ScheduleService;
+        $this->scheduleService = $scheduleService;
     }
 
+    /**
+     * Display schedule list
+     */
     public function index(Request $request)
     {
         $user = Auth::user();
 
-<<<<<<< Updated upstream
+        // ================= BASE QUERY =================
         $query = Schedule::with([
             'teacher.department',
             'class',
             'subject',
         ])->withCount('students');
-
-=======
-        // ================= BASE QUERY =================
-        $query = Schedule::with(['teacher.department', 'class', 'subject'])
-            ->withCount('students');
->>>>>>> Stashed changes
 
         // ================= ROLE FILTER =================
         if ($user->hasRole('teacher')) {
@@ -52,26 +47,25 @@ class ScheduleController extends Controller
 
         } elseif ($user->hasRole('student')) {
 
-            $departmentId = Student::where('user_id', $user->id)->value('department_id');
+            $departmentId = Student::where('user_id', $user->id)
+                ->value('department_id');
 
             $query->where('department_id', $departmentId);
 
         } elseif ($user->hasRole('admin')) {
 
-<<<<<<< Updated upstream
             $query = $this->scheduleService
                 ->getWithsearchFilters($request->all(), $user);
         }
 
-
+        // ================= SORT =================
         $query->orderByRaw('TIME(start_time) ASC');
 
-
+        // ================= DATA =================
         if ($user->hasRole('admin')) {
 
             $data = $query->paginate(10)->withQueryString();
 
-            // collection for timetable
             $scheduleCollection = collect($data->items());
 
         } else {
@@ -81,7 +75,7 @@ class ScheduleController extends Controller
             $scheduleCollection = $data;
         }
 
-
+        // ================= DAYS =================
         $days = [
             'Monday',
             'Tuesday',
@@ -90,68 +84,38 @@ class ScheduleController extends Controller
             'Friday',
         ];
 
-
-        $time = Schedule::query()
-
-            ->when($user->hasRole('teacher'), function ($q) use ($user) {
-
-                $teacherId = Teacher::where('user_id', $user->id)->value('id');
-
-                $q->where('teacher_id', $teacherId);
-
-            })
-
-            ->when($user->hasRole('student'), function ($q) use ($user) {
-
-                $departmentId = Student::where('user_id', $user->id)->value('department_id');
-
-                $q->where('department_id', $departmentId);
-
-            })
-
-=======
-            // Keep your service
-            $query = $this->scheduleService->getWithsearchFilters($request->all(), $user);
-        }
-
-        // ================= SORT =================
-        $query->orderByRaw('TIME(start_time) ASC');
-
-        // ================= DATA =================
-        if ($user->hasRole('admin')) {
-            // Admin → paginate (used in table + pagination UI)
-            $schedules = $query->paginate(10)->withQueryString();
-        } else {
-            // Teacher & Student → full collection (used for timetable grid)
-            $schedules = $query->get();
-        }
-
         // ================= TIME SLOTS =================
         $time = Schedule::query()
+
             ->when($user->hasRole('teacher'), function ($q) use ($user) {
-                $teacherId = Teacher::where('user_id', $user->id)->value('id');
+
+                $teacherId = Teacher::where('user_id', $user->id)
+                    ->value('id');
+
                 $q->where('teacher_id', $teacherId);
+
             })
+
             ->when($user->hasRole('student'), function ($q) use ($user) {
-                $departmentId = Student::where('user_id', $user->id)->value('department_id');
+
+                $departmentId = Student::where('user_id', $user->id)
+                    ->value('department_id');
+
                 $q->where('department_id', $departmentId);
+
             })
->>>>>>> Stashed changes
+
             ->select('start_time', 'end_time')
-
             ->groupBy('start_time', 'end_time')
-<<<<<<< Updated upstream
-
             ->orderByRaw('TIME(start_time) ASC')
-
             ->get();
 
-
+        // ================= TIMETABLE =================
         $schedules = [];
 
-        foreach ($time as $pkey => $t) {
+        foreach ($time as $key => $t) {
 
-            $schedules[$pkey]['time'] = [
+            $schedules[$key]['time'] = [
                 'start_time' => $t->start_time,
                 'end_time'   => $t->end_time,
             ];
@@ -162,35 +126,22 @@ class ScheduleController extends Controller
                     ->where('day', $day)
                     ->where('start_time', $t->start_time);
 
-                $schedules[$pkey][$day] = $items;
+                $schedules[$key][$day] = $items;
             }
         }
 
-
-        $departments = Department::all();
-
-        $teachers = Teacher::select('id', 'name')->get();
-
-        $classes = Classroom::select('id', 'class_name')->get();
-
-        $students = Student::select('id', 'name')->get();
-
-        $subjects = Subject::all();
-
-
-=======
-            ->orderByRaw('TIME(start_time) ASC')
-            ->get();
-
         // ================= EXTRA DATA =================
         $departments = Department::all();
+
         $teachers = Teacher::select('id', 'name')->get();
+
         $classes = Classroom::select('id', 'class_name')->get();
+
         $students = Student::select('id', 'name')->get();
+
         $subjects = Subject::all();
 
->>>>>>> Stashed changes
-        return view('Schedule.index', compact(
+        return view('schedule.index', compact(
             'schedules',
             'time',
             'departments',
@@ -203,112 +154,173 @@ class ScheduleController extends Controller
         ));
     }
 
+    /**
+     * Store new schedule
+     */
     public function store(StoreScheduleRequest $request)
     {
-        // dd($request->all());
-        $this->scheduleService->createSchedule($request->validated());
+        $this->scheduleService
+            ->createSchedule($request->validated());
 
-        return back()->with('success', 'Schedule created successfully!');
+        return redirect()
+            ->back()
+            ->with('success', 'Schedule created successfully!');
     }
 
+    /**
+     * Enroll student
+     */
+    public function storeEnrollment(StoreEnrollmentRequest $request)
+    {
+        $this->scheduleService
+            ->enrollStudent($request->validated());
+
+        return redirect()
+            ->back()
+            ->with('success', 'Student enrolled successfully!');
+    }
+
+    /**
+     * Show schedule detail
+     */
+    public function show(Schedule $schedule)
+    {
+        $schedule->load([
+            'class',
+            'teacher',
+            'students',
+            'subject',
+        ]);
+
+        return view('schedule.show', compact('schedule'));
+    }
+
+    /**
+     * View class students
+     */
     public function viewClass($id)
     {
-        $schedule = Schedule::with(['class', 'teacher', 'students'])->findOrFail($id);
+        $schedule = Schedule::with([
+            'class',
+            'teacher',
+            'students',
+        ])->findOrFail($id);
 
         $students = $schedule->students;
 
-        return view('Schedule.view_class', compact('schedule', 'students'));
+        return view('schedule.view_class', compact(
+            'schedule',
+            'students'
+        ));
     }
 
-    public function showClass($id)
-    {
-        $schedule = Schedule::with(['class', 'teacher', 'students'])->findOrFail($id);
-
-        $students = $schedule->students;
-
-        return view('Class.show', compact('schedule', 'students'));
-    }
-
-    public function destroy($id)
-    {
-        $schedule = Schedule::findOrFail($id);
-        $schedule->delete();
-
-        return redirect()->back()->with('success', 'Schedule deleted successfully');
-    }
-
-    public function removeStudent($scheduleId, $studentId)
-    {
-        // Find schedule
-        $schedule = Schedule::findOrFail($scheduleId);
-
-        // Remove student from pivot table
-        $schedule->students()->detach($studentId);
-
-        return redirect()->back()->with('success', 'Student removed from schedule successfully.');
-    }
-
+    /**
+     * Student schedule
+     */
     public function studentSchedule($id)
     {
         $student = Student::findOrFail($id);
 
-        $schedules = $student->schedules()->with(['class', 'teacher', 'subject'])->withCount('students')->get();
+        $schedules = $student->schedules()
+            ->with([
+                'class',
+                'teacher',
+                'subject',
+            ])
+            ->withCount('students')
+            ->get();
 
-        return view('Schedule.student_detail', compact('student', 'schedules'));
+        return view('schedule.student_detail', compact(
+            'student',
+            'schedules'
+        ));
     }
 
-    public function getSubjects($departmentId)
-    {
-        $subjects = Subject::where('department_id', $departmentId)->get();
-
-        return response()->json($subjects);
-    }
-
-    public function getTeachers($departmentId)
-    {
-        $teachers = Teacher::where('department_id', $departmentId)->get();
-
-        return response()->json($teachers);
-    }
-
-    // app/Http/Controllers/ScheduleController.php
-
-    // ... (your existing imports and index method)
-
+    /**
+     * Edit schedule
+     */
     public function edit(Schedule $schedule)
     {
-
-        $schedule->load('subject', 'teacher.department', 'class');
+        $schedule->load([
+            'subject',
+            'teacher.department',
+            'class',
+        ]);
 
         return response()->json($schedule);
     }
 
-    public function update(UpdateScheduleRequest $request, Schedule $schedule)
+    /**
+     * Update schedule
+     */
+    public function update(
+        UpdateScheduleRequest $request,
+        Schedule $schedule
+    ) {
+        $this->scheduleService->updateSchedule(
+            $schedule,
+            $request->validated()
+        );
+
+        return redirect()
+            ->back()
+            ->with('success', 'Schedule updated successfully!');
+    }
+
+    /**
+     * Delete schedule
+     */
+    public function destroy($id)
     {
-<<<<<<< Updated upstream
-        $this->scheduleService->updateSchedule($schedule, $request->validated());
-=======
-        $request->validate([
-            'department_id' => 'required|integer|exists:departments,id',
-            'subject_id' => 'required|integer|exists:subjects,id',
-            'teacher_id' => 'required|integer|exists:teachers,id',
-            'class_id' => 'required|integer|exists:classes,id',
-            'day' => 'required|string',
-            'start_time' => 'required',
-            'end_time' => 'required|after:start_time',
-        ]);
+        $schedule = Schedule::findOrFail($id);
 
-        $schedule->update([
-            'department_id' => $request->department_id,
-            'subject_id' => $request->subject_id,
-            'teacher_id' => $request->teacher_id,
-            'class_id' => $request->class_id,
-            'day' => $request->day,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
-        ]);
+        $schedule->delete();
 
->>>>>>> Stashed changes
-        return redirect()->back()->with('success', 'Schedule updated successfully!');
+        return redirect()
+            ->back()
+            ->with('success', 'Schedule deleted successfully!');
+    }
+
+    /**
+     * Remove student from schedule
+     */
+    public function unEnrollStudent($scheduleId, $studentId)
+    {
+        $schedule = Schedule::findOrFail($scheduleId);
+
+        $schedule->students()->detach($studentId);
+
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'Student removed from schedule successfully!'
+            );
+    }
+
+    /**
+     * Get subjects by department
+     */
+    public function getSubjects($departmentId)
+    {
+        $subjects = Subject::where(
+            'department_id',
+            $departmentId
+        )->get();
+
+        return response()->json($subjects);
+    }
+
+    /**
+     * Get teachers by department
+     */
+    public function getTeachers($departmentId)
+    {
+        $teachers = Teacher::where(
+            'department_id',
+            $departmentId
+        )->get();
+
+        return response()->json($teachers);
     }
 }

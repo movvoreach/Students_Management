@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Student;
+
 class UpdateStudentRequest extends FormRequest
 {
     /**
@@ -21,21 +20,20 @@ class UpdateStudentRequest extends FormRequest
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-
     {
         $student = $this->route('student');
         return [
             //
-            'department_id' =>'nullable',
-            'student_code' => 'required|unique:students,student_code,' . $student->id,
-            'name'         => 'required',
-            'email'        => 'required|email|unique:students,email,' . $student->id,
-            'class'        => 'nullable',
-            'name'       => 'required',
-            'gender'     => 'required',
-            'dob'        => 'required|date',
-            'phone'      => 'required',
-            'image'      => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'department_id' => 'nullable',
+            'student_code'  => 'required|unique:students,student_code,' . $student->id,
+            'name'          => 'required',
+            'email'         => 'required|email|unique:students,email,' . $student->id,
+            'class'         => 'nullable',
+            'name'          => 'required',
+            'gender'        => 'required',
+            'dob'           => 'required|date',
+            'phone'         => 'required',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

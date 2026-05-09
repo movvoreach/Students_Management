@@ -121,12 +121,11 @@
                 {{-- TITLE SECTION --}}
                 <div class="text-center mb-3">
                     <h3 class="fw-bold text-dark mb-1">
-                        {{ $schedule->class->class_name ?? 'N/A' }}
+                        {{ $class->class_name }}
                     </h3>
 
                     <span class="text-muted">
-                        {{ $schedule->subject->subject_name ?? 'Course Schedule Management (Ms-Word and Ms-Excel)' }}
-
+                        {{ $class->id }}
                     </span>
                 </div>
 
@@ -138,9 +137,9 @@
                     {{-- Teacher --}}
                     <div class="col-md-3">
                         <div class="p-2">
-                            <small class="text-muted d-block">Teacher</small>
+                            <small class="text-muted d-block">Table Number</small>
                             <div class="fw-semibold text-dark">
-                                {{ $schedule->teacher->name ?? 'N/A' }}
+                                {{ $class->table }}
                             </div>
                         </div>
                     </div>
@@ -148,53 +147,18 @@
                     {{-- Subject --}}
                     <div class="col-md-3">
                         <div class="p-2">
-                            <small class="text-muted d-block">Department</small>
+                            <small class="text-muted d-block">Status</small>
                             <div class="fw-semibold text-dark">
-                                {{ optional(optional($schedule->teacher)->department)->department_name ?? 'English' }}
+                                <p>
+                                    @if ($class->status == 'active')
+                                        <span class="badge badge-success">Active</span>
+                                    @else
+                                        <span class="badge badge-danger">Inactive</span>
+                                    @endif
+                                </p>
                             </div>
                         </div>
                     </div>
-
-                    {{-- Day --}}
-                    <div class="col-md-3">
-                        <div class="p-2">
-                            <small class="text-muted d-block">Day</small>
-                            <div class="fw-semibold text-dark">
-                                {{ $schedule->day }}
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Time --}}
-                    <div class="col-md-3">
-                        <div class="p-2">
-                            <small class="text-muted d-block">Time</small>
-                            <div class="fw-bold text-success">
-                                {{ $schedule->start_time }} - {{ $schedule->end_time }}
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Schedule Code --}}
-                    <div class="col-md-6">
-                        <div class="p-2 bg-light rounded">
-                            <small class="text-muted d-block">Schedule Code</small>
-                            <div class="fw-semibold text-dark">
-                                #{{ $schedule->id ?? '008' }}
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Created Date --}}
-                    <div class="col-md-6">
-                        <div class="p-2 bg-light rounded">
-                            <small class="text-muted d-block">Created Date</small>
-                            <div class="fw-semibold text-dark">
-                                {{ optional($schedule->created_at)->format('d/m/Y') ?? '01/08/2024' }}
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
@@ -205,16 +169,13 @@
 
             <div class="card-header bg-white">
 
-                <strong>Student List</strong>
+                <strong>Schedule List</strong>
 
-                @hasanyrole('admin|teacher')
-                    {{-- BUTTON OPEN MODAL — visible to admin and teacher only --}}
-                    <a href="#" id="btnadd" class="btn btn-primary btn-sm float-right" data-toggle="modal"
-                        data-target="#enrollModal">
-                        <i class="fas fa-plus"></i>
-                    </a>
-                @endhasanyrole
-
+                {{-- BUTTON OPEN MODAL --}}
+                {{-- <a href="#" id="btnadd" class="btn btn-primary btn-sm float-right" data-toggle="modal"
+                    data-target="#enrollModal">
+                    <i class="fas fa-plus"></i>
+                </a> --}}
 
             </div>
 
@@ -222,70 +183,38 @@
 
                 <table class="table table-bordered table-hover">
 
+
                     <thead>
                         <tr class="text-center">
-                            <th>No</th>
-                            <th>Student Name</th>
-                            <th>Code</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Action</th>
+                            <th class="text-center" width="50">#</th>
+                            <th>Schedule</th>
+                            <th>Day</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
-
                     <tbody>
-
-                        @forelse ($students as $key => $student)
-                            <tr>
-                                <td class="text-center">{{ $key + 1 }}</td>
-
+                        @foreach ($scheduleInClass as $key => $item)
+                            <tr class="text-center">
+                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $item->start_time }} - {{ $item->end_time }}</td> <!-- Adjust column names -->
+                                <td>{{ $item->day }}</td>
                                 <td>
-                                    <strong>{{ $student->name }}</strong>
-                                    <div class="text-muted small">{{ $student->gender }}</div>
-                                </td>
-
-                                <td>{{ $student->student_code }}</td>
-
-                                <td><span class="badge badge-success">Active</span></td>
-
-                                <td>{{ $student->created_at->format('d/m/Y') }}</td>
-
-                                <td class="text-center">
-                                    <a href="{{ route('schedule.student.detail', $student->id) }}"
-                                        class="btn btn-info btn-sm">
-                                        <i class="fas fa-eye"></i>
+                                    <!-- Action Buttons -->
+                                    <a href="{{ route('schedule.show', $item->id) }}" class="btn btn-sm btn-primary">
+                                        View
                                     </a>
 
-                                    <form action="{{ route('schedule.removeStudent', [$schedule->id, $student->id]) }}"
-                                        method="POST" class="d-inline-block"
-                                        onsubmit="return confirm('Are you sure you want to remove this student from this schedule?');">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
                                 </td>
                             </tr>
-
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center text-muted">
-                                    No students found
-                                </td>
-                            </tr>
-                        @endforelse
-
-                    </tbody>
+                        @endforeach
 
                 </table>
 
             </div>
-
+            {{--
             <div class="card-footer">
                 Total Students: {{ $students->count() }}
-            </div>
+            </div> --}}
 
         </div>
 
