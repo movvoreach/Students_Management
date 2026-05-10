@@ -12,15 +12,14 @@ class DepartmentController extends Controller
 {
     //
     protected $departmentService;
-
-    public function __construct(DepartmentService $departmentService)
-    {
+    public function __construct( DepartmentService $departmentService){
         $this->departmentService = $departmentService;
     }
 
     public function index(Request $request)
     {
-        $departments = $this->departmentService->getWithsearchFilters($request->all());
+        $departments = $this->departmentService
+            ->getWithsearchFilters($request->all());
 
         return view('department.index', compact('departments'));
     }
@@ -35,7 +34,6 @@ class DepartmentController extends Controller
     public function store(StoreDepartmentRequest $request)
     {
         $this->departmentService->store($request->validated());
-
         return redirect()->route('departments.index')
             ->with('success', 'Department created successfully!');
     }
@@ -44,7 +42,6 @@ class DepartmentController extends Controller
     public function edit($id)
     {
         $department = Department::findOrFail($id);
-
         return view('department.edit', compact('department'));
     }
 
@@ -52,7 +49,6 @@ class DepartmentController extends Controller
     public function update(UpdateDepartmentRequest $request, Department $department)
     {
         $this->departmentService->update($department, $request->validated());
-
         return redirect()->route('departments.index')->with('success', 'Department updated successfully!');
     }
 
