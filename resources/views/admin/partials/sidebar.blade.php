@@ -18,7 +18,6 @@
             @php
                 $user = auth()->user();
 
-<<<<<<< HEAD
                 $profileImage = asset('backend/dist/img/user2-160x160.jpg');
 
                 if ($user->student?->image) {
@@ -37,25 +36,6 @@
                         class="img-circle elevation-2"
                         alt="User Image"
                         style="width:40px; height:40px; object-fit:cover;">
-=======
-                    if ($user->student && $user->student->image) {
-                        $profileImage = asset('storage/' . $user->student->image);
-                    } elseif ($user->teacher && $user->teacher->image) {
-                        $profileImage = asset('storage/' . $user->teacher->image);
-                    } elseif ($user->image) {
-                        $profileImage = asset('storage/' . $user->image);
-                    }
-                @endphp
-                <!-- USER PANEL -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="{{ $profileImage }}" class="img-circle"
-                            style="width:40px; height:35px; object-fit: cover;">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Welcome: {{ Auth::user()->name ?? 'User' }}</a>
-                    </div>
->>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
                 </div>
 
                 <div class="info">
@@ -88,37 +68,9 @@
 
             @else
 
-<<<<<<< HEAD
                 <!-- ================================================= -->
                 <!-- ADMIN MENU -->
                 <!-- ================================================= -->
-=======
-                    @can('view class')
-                        <li class="nav-item">
-                            <a href="{{ route('classes.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-school"></i>
-                                <p>Classes</p>
-                            </a>
-                        </li>
-                    @endcan
-                    @can('view department')
-                        <li class="nav-item">
-                            <a href="{{ route('departments.index') }}" class="nav-link">
-                                <i class="nav-icon fas fa-building"></i>
-                                <p>Departments</p>
-                            </a>
-                        </li>
-                    @endcan
-                    @can('view subject')
-                        <li class="nav-item">
-                            <a href="{{ route('subjects.index') }}" class="nav-link"></a>
-                                <i class="nav-icon fas fa-book-open"></i>
-                                <p>Subjects</p>
-                            </a>
-                        </li>
-                    @endcan
-                @endif
->>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
 
                 @can('view dashboard')
                     <li class="nav-item">

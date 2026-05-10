@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
 use App\Models\Department;
@@ -10,68 +8,71 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    //
-    protected $departmentService;
-    public function __construct( DepartmentService $departmentService){
+    protected DepartmentService $departmentService;
+
+    public function __construct(DepartmentService $departmentService)
+    {
         $this->departmentService = $departmentService;
     }
 
-<<<<<<< HEAD
+    // ================= INDEX =================
     public function index(Request $request)
     {
         $departments = $this->departmentService
             ->getWithsearchFilters($request->all());
 
-=======
-     public function index()
-    {
-        $departments = $this->departmentService->getWithsearchFilters(request()->all());
->>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
         return view('department.index', compact('departments'));
     }
 
-    // Show create form
+    // ================= CREATE =================
     public function create()
     {
         return view('department.create');
     }
 
-    // Store new department
+    // ================= STORE =================
     public function store(StoreDepartmentRequest $request)
     {
         $this->departmentService->store($request->validated());
-        return redirect()->route('departments.index')
+
+        return redirect()
+            ->route('departments.index')
             ->with('success', 'Department created successfully!');
     }
 
-    //  Show edit form
+    // ================= EDIT =================
     public function edit($id)
     {
         $department = Department::findOrFail($id);
+
         return view('department.edit', compact('department'));
     }
 
-    // Update department
+    // ================= UPDATE =================
     public function update(UpdateDepartmentRequest $request, Department $department)
     {
         $this->departmentService->update($department, $request->validated());
-        return redirect()->route('departments.index')->with('success', 'Department updated successfully!');
+
+        return redirect()
+            ->route('departments.index')
+            ->with('success', 'Department updated successfully!');
     }
 
+    // ================= DELETE =================
     public function destroy($id)
     {
         $department = Department::findOrFail($id);
         $department->delete();
 
-        return redirect()->back()
+        return redirect()
+            ->back()
             ->with('success', 'Department deleted successfully!');
     }
 
-    // Show single department (optional)
+    // ================= SHOW =================
     public function show($id)
     {
         $department = Department::findOrFail($id);
-        // $scheduleInClass = $department->schedules()->with('teacher', 'subject')->get();
 
         return view('department.show', compact('department'));
     }

@@ -231,9 +231,10 @@
                                     {{-- ACTION --}}
                                     <td class="text-center">
 
-                                        <a href="{{ route('schedule.student.detail', $student->id) }}"
+                                        {{-- <a href="{{ route('schedule.student.detail', $student->id) }}"
                                             class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
+                                        </a> --}}
 
                                         </a>
 

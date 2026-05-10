@@ -70,17 +70,10 @@
     <div class="card bg-white shadow-sm">
 
         <div class="card-header">
-<<<<<<< HEAD
             <h3 class="card-title">Subject Information</h3>
         </div>
 
         <form action="{{ route('subjects.store') }}" method="POST">
-=======
-            <h3 class="card-title">Department Information</h3>
-        </div>
-
-        <form action="{{ route('departments.store') }}" method="POST">
->>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
             @csrf
 
             <div class="card-body">
@@ -88,7 +81,6 @@
                     <!-- Department Name -->
                     <div class="col-md-12">
                         <label>Department Name <span class="required">*</span></label>
-<<<<<<< HEAD
                         <select name="department_id" class="form-control">
                             <option value="">Select Department</option>
 
@@ -96,12 +88,6 @@
                                 <option value="{{ $department->id }}">
                                     {{ $department->department_name }}
                                 </option>
-=======
-                         <select name="department_id" class="form-control custom-input">
-                            <option value="">Select Department</option>
-                            @foreach ($departments as $department)
-                                <option value="{{ $department->id }}">{{ $department->department_name }}</option>
->>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
                             @endforeach
                         </select>
                     </div>

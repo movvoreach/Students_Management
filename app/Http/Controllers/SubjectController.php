@@ -33,7 +33,6 @@ class SubjectController extends Controller
     }
 
     // Store new subject
-<<<<<<< HEAD
    public function store(StoreSubjectRequest $request)
     {
         //  dd($request->all());
@@ -41,13 +40,6 @@ class SubjectController extends Controller
 
         return redirect()
             ->route('subjects.index')
-=======
-    public function store(Request $request)
-    {
-        dd($request->all());
-        // $this->subjectService->store($request->validated());
-        return redirect()->route('subjects.index')
->>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
             ->with('success', 'Subject created successfully!');
     }
 
@@ -79,16 +71,9 @@ class SubjectController extends Controller
     public function show($id)
     {
         $subject = Subject::findOrFail($id);
-<<<<<<< HEAD
         $department = Department::all();
         // $scheduleInClass = $subject->schedules()->with('teacher', 'subject')->get();
 
         return view('subject.show', compact('subject', 'department'));
-=======
-        $departments = Department::all();
-        // $scheduleInClass = $subject->schedules()->with('teacher', 'subject')->get();
-
-        return view('subject.show', compact('subject'));
->>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
     }
 }

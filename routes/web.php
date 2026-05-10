@@ -1,9 +1,5 @@
 <?php
 
-<<<<<<< HEAD
-=======
-use App\Http\Controllers\AuthController;
->>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
 use App\Http\Controllers\DashbordsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScheduleController;
@@ -29,27 +25,12 @@ Route::get('/', [DashbordsController::class, 'index'])
 //     ->name('dashboard')
 //     ->middleware(['auth']);
 
-<<<<<<< HEAD
 include __DIR__.'/backend/admin.php';
 include __DIR__.'/backend/department.php';
 include __DIR__.'/backend/subjects.php';
 
 Route::middleware(['auth', 'role:teacher|student|admin'])->group(function () {
 
-=======
-/*
-|--------------------------------------------------------------------------
-| Admin Routes
-|--------------------------------------------------------------------------
-*/
-
-include __DIR__.'/backend/admin.php';
-
-
-Route::middleware(['auth', 'role:teacher|student|admin'])->group(function () {
-
-
->>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
     // AJAX for enrollment
     Route::post('/schedule/enroll/students', [ScheduleController::class, 'storeEnrollment'])->name('enrollment.store')->middleware('permission:create schedule');
 

@@ -51,7 +51,6 @@
     </section>
 
     {{-- SEARCH --}}
-<<<<<<< HEAD
     <form method="GET" action="{{ route('departments.index') }}">
 
         <div class="row g-2 align-items-center">
@@ -96,60 +95,6 @@
         </div>
 
     </form>
-=======
-    <div class="col-12">
-        <div class="card shadow-sm">
-            <div class="card-body">
-
-                <form method="GET" action="{{ route('departments.index') }}">
-
-                    <div class="row g-2 align-items-center">
-
-                        {{-- SEARCH --}}
-                        <div class="col-md-5">
-                            <div class="input-group">
-
-                                <a href="{{ route('departments.index') }}" class="btn btn-warning">
-                                    <i class="fas fa-eraser"></i>
-                                </a>
-
-                                <input type="text" id="searchInput" name="search" value="{{ request('search') }}"
-                                    class="form-control" placeholder="Search department name">
-
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-
-                            </div>
-                        </div>
-
-
-
-                        {{-- PER PAGE --}}
-                        <div class="col-md-2">
-                            <select name="per_page" class="form-control" onchange="this.form.submit()">
-                                <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
-                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
-                                <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
-                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
-                            </select>
-                        </div>
-
-                        {{-- TOTAL --}}
-                        <div class="col-md-3 text-end">
-                            <span class="text-muted">
-                                Total: {{ $departments->total() }}
-                            </span>
-                        </div>
-
-                    </div>
-
-                </form>
-
-            </div>
-        </div>
-    </div>
->>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show">
