@@ -4,8 +4,11 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ScheduleController;
+<<<<<<< HEAD
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\SubjectController;
+=======
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -69,7 +72,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/{id}', [TeacherController::class, 'destroy'])->name('destroy')->middleware('permission:delete teacher');
     });
     //Departments
+<<<<<<< HEAD
 
+=======
+    Route::resource('departments', DepartmentController::class)->middleware('permission:view department');
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
     // Subjects
     Route::resource('subjects', SubjectController::class)->middleware('permission:view subject');
 

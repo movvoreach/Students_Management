@@ -23,6 +23,12 @@ class ScheduleController extends Controller
     {
         $this->scheduleService = $scheduleService;
     }
+    public function storeEnrollment(StoreEnrollmentRequest $request)
+    {
+        $this->scheduleService->enrollStudent($request->validated());
+
+        return redirect()->back()->with('success', 'Student enrolled successfully');
+    }
 
     /**
      * Display schedule list
@@ -38,7 +44,10 @@ class ScheduleController extends Controller
             'subject',
         ])->withCount('students');
 
+<<<<<<< HEAD
         // ================= ROLE FILTER =================
+=======
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
         if ($user->hasRole('teacher')) {
 
             $teacherId = Teacher::where('user_id', $user->id)->value('id');
@@ -58,10 +67,15 @@ class ScheduleController extends Controller
                 ->getWithsearchFilters($request->all(), $user);
         }
 
+<<<<<<< HEAD
         // ================= SORT =================
         $query->orderByRaw('TIME(start_time) ASC');
 
         // ================= DATA =================
+=======
+        $query->orderByRaw('TIME(start_time) ASC');
+
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
         if ($user->hasRole('admin')) {
 
             $data = $query->paginate(10)->withQueryString();
@@ -75,7 +89,10 @@ class ScheduleController extends Controller
             $scheduleCollection = $data;
         }
 
+<<<<<<< HEAD
         // ================= DAYS =================
+=======
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
         $days = [
             'Monday',
             'Tuesday',
@@ -84,7 +101,10 @@ class ScheduleController extends Controller
             'Friday',
         ];
 
+<<<<<<< HEAD
         // ================= TIME SLOTS =================
+=======
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
         $time = Schedule::query()
 
             ->when($user->hasRole('teacher'), function ($q) use ($user) {
@@ -110,7 +130,10 @@ class ScheduleController extends Controller
             ->orderByRaw('TIME(start_time) ASC')
             ->get();
 
+<<<<<<< HEAD
         // ================= TIMETABLE =================
+=======
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
         $schedules = [];
 
         foreach ($time as $key => $t) {
@@ -130,7 +153,10 @@ class ScheduleController extends Controller
             }
         }
 
+<<<<<<< HEAD
         // ================= EXTRA DATA =================
+=======
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
         $departments = Department::all();
 
         $teachers = Teacher::select('id', 'name')->get();
@@ -159,6 +185,7 @@ class ScheduleController extends Controller
      */
     public function store(StoreScheduleRequest $request)
     {
+<<<<<<< HEAD
         $this->scheduleService
             ->createSchedule($request->validated());
 
@@ -198,6 +225,12 @@ class ScheduleController extends Controller
     /**
      * View class students
      */
+=======
+        $this->scheduleService->createSchedule($request->validated());
+        return back()->with('success', 'Schedule created successfully!');
+    }
+
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
     public function viewClass($id)
     {
         $schedule = Schedule::with([
@@ -208,10 +241,41 @@ class ScheduleController extends Controller
 
         $students = $schedule->students;
 
+<<<<<<< HEAD
         return view('schedule.view_class', compact(
             'schedule',
             'students'
         ));
+=======
+        return view('Schedule.view_class', compact('schedule', 'students'));
+    }
+
+    public function show(Schedule $schedule)
+    {
+        // $schedule = Schedule::with(['class', 'teacher', 'students'])->findOrFail($id);
+        return view('schedule.show', compact('schedule'));
+    }
+
+    public function destroy($id)
+    {
+        $schedule = Schedule::findOrFail($id);
+        $schedule->delete();
+
+        return redirect()->back()->with('success', 'Schedule deleted successfully');
+    }
+
+    // Unenroll student from schedule
+    public function unEnrollStudent($scheduleId, $studentId)
+    {
+        dd($scheduleId, $studentId);
+        // Find schedule
+        $schedule = Schedule::findOrFail($scheduleId);
+
+        // Remove student from pivot table
+        $schedule->students()->detach($studentId);
+
+        return redirect()->back()->with('success', 'Student removed from schedule successfully.');
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
     }
 
     /**
@@ -236,9 +300,12 @@ class ScheduleController extends Controller
         ));
     }
 
+<<<<<<< HEAD
     /**
      * Edit schedule
      */
+=======
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
     public function edit(Schedule $schedule)
     {
         $schedule->load([

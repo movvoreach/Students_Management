@@ -16,11 +16,17 @@ class DepartmentController extends Controller
         $this->departmentService = $departmentService;
     }
 
+<<<<<<< HEAD
     public function index(Request $request)
     {
         $departments = $this->departmentService
             ->getWithsearchFilters($request->all());
 
+=======
+     public function index()
+    {
+        $departments = $this->departmentService->getWithsearchFilters(request()->all());
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
         return view('department.index', compact('departments'));
     }
 

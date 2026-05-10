@@ -116,16 +116,31 @@
         <div class="card shadow-sm mt-4">
             <div class="card-body">
 
+<<<<<<< HEAD
                 <h2 class="schedule-title">{{ $subject->department->department_name }}</h2>
                 <p class="schedule-subtitle">Subject Name: {{ $subject->subject_name }}</p>
                 <p class="schedule-subtitle">Department ID: {{ $subject->department->id }}</p>
+=======
+                <h2 class="schedule-title">{{ $department->department_name }}</h2>
+                <p class="schedule-subtitle">Department ID: {{ $department->id }}</p>
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
 
                 <hr>
 
 
+<<<<<<< HEAD
             </div>
 
 
         </div>
 
     @endsection
+=======
+    </div>
+
+
+    </div>
+
+@endsection
+
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23

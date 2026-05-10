@@ -22,10 +22,17 @@ class StoreSubjectRequest extends FormRequest
      */
     public function rules(): array
     {
+<<<<<<< HEAD
      return [
         'subject_name' => 'required|string|max:255|unique:subjects,subject_name',
 
         'department_id' => 'required|integer|exists:departments,id',
+=======
+        return [
+            //
+            'subject_name' => 'required|string|max:255|unique:subjects,subject_name',
+            'department_id' => 'required|exists:departments,id',
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
         ];
     }
 }

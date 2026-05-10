@@ -1,6 +1,10 @@
 @extends('admin.layouts.master')
 
+<<<<<<< HEAD
 @section('title', 'Subject Management')
+=======
+@section('title', 'Class Management')
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
 
 @push('styles')
     <style>
@@ -86,6 +90,7 @@
                                 <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
                                 <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
                                 <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+<<<<<<< HEAD
                                 <option value="60" {{ request('per_page') == 60 ? 'selected' : '' }}>60</option>
                                 <option value="70" {{ request('per_page') == 70 ? 'selected' : '' }}>70</option>
                                 <option value="80" {{ request('per_page') == 80 ? 'selected' : '' }}>80</option>
@@ -94,6 +99,8 @@
                                 <option value="110" {{ request('per_page') == 110 ? 'selected' : '' }}>110</option>
                                 <option value="120" {{ request('per_page') == 120 ? 'selected' : '' }}>120</option>
                                 <option value="130" {{ request('per_page') == 130 ? 'selected' : '' }}>130</option>
+=======
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
                             </select>
                         </div>
 
@@ -199,7 +206,12 @@
                                     <td class="text-center">
 
                                         {{-- VIEW --}}
+<<<<<<< HEAD
                                         <a href="{{ route('subjects.show', $subject->id) }}" class="btn btn-info btn-sm">
+=======
+                                        <a href="{{ route('subjects.show', $subject->id) }}"
+                                            class="btn btn-info btn-sm">
+>>>>>>> 76e73daff4800ff2b39ac38c1463607781ccef23
                                             <i class="fas fa-eye"></i>
                                         </a>
 
