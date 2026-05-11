@@ -193,7 +193,7 @@
                                     <td>
                                         <strong>{{ $subject->subject_name }}</strong>
                                         <div class="small text-muted">
-                                            Department:{{ $subject->department->department_name }}
+                                            {{-- Department:{{ $subject->department->department_name }} --}}
                                         </div>
                                     </td>
 

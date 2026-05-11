@@ -16,6 +16,10 @@ class DashbordsController extends Controller
         $totalSchedules  = \App\Models\Schedule::count();
         $tatalSubject    = \App\Models\Subject::count();
         $totalDepartment = \App\Models\Department::count();
+        $enrollments     = ScheduleStudent::with('student','class','schedule')
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('admin.dashboard',
             compact(
@@ -25,7 +29,8 @@ class DashbordsController extends Controller
                 'enrollmentCount',
                 'totalSchedules',
                 'tatalSubject',
-                'totalDepartment'
+                'totalDepartment',
+                'enrollments'
             ));
     }
 }

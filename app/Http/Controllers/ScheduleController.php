@@ -1,14 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEnrollmentRequest;
 use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Requests\UpdateScheduleRequest;
-use App\Models\Classroom;
-use App\Models\Department;
 use App\Models\Schedule;
-use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Services\ScheduleService;
@@ -35,83 +31,12 @@ class ScheduleController extends Controller
     // ================= INDEX =================
     public function index(Request $request)
     {
-        $user = Auth::user();
+        $result = $this->scheduleService->getScheduleIndexData(
+            $request->all(),
+            Auth::user()
+        );
 
-        $query = Schedule::with([
-            'teacher.department',
-            'class',
-            'subject',
-        ])->withCount('students');
-
-        if ($user->hasRole('teacher')) {
-
-            $teacherId = Teacher::where('user_id', $user->id)->value('id');
-            $query->where('teacher_id', $teacherId);
-
-        } elseif ($user->hasRole('student')) {
-
-            $departmentId = Student::where('user_id', $user->id)->value('department_id');
-            $query->where('department_id', $departmentId);
-
-        } elseif ($user->hasRole('admin')) {
-
-            $query = $this->scheduleService
-                ->getWithsearchFilters($request->all(), $user);
-        }
-
-        $query->orderByRaw('TIME(start_time) ASC');
-
-        if ($user->hasRole('admin')) {
-            $data = $query->paginate(10)->withQueryString();
-            $scheduleCollection = collect($data->items());
-        } else {
-            $data = $query->get();
-            $scheduleCollection = $data;
-        }
-
-        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
-        $time = Schedule::query()
-            ->select('start_time', 'end_time')
-            ->groupBy('start_time', 'end_time')
-            ->orderByRaw('TIME(start_time) ASC')
-            ->get();
-
-        $schedules = [];
-
-        foreach ($time as $key => $t) {
-
-            $schedules[$key]['time'] = [
-                'start_time' => $t->start_time,
-                'end_time' => $t->end_time,
-            ];
-
-            foreach ($days as $day) {
-                $items = $scheduleCollection
-                    ->where('day', $day)
-                    ->where('start_time', $t->start_time);
-
-                $schedules[$key][$day] = $items;
-            }
-        }
-
-        $departments = Department::all();
-        $teachers = Teacher::select('id', 'name')->get();
-        $classes = Classroom::select('id', 'class_name')->get();
-        $students = Student::select('id', 'name')->get();
-        $subjects = Subject::all();
-
-        return view('schedule.index', compact(
-            'schedules',
-            'time',
-            'departments',
-            'teachers',
-            'classes',
-            'students',
-            'subjects',
-            'days',
-            'data'
-        ));
+        return view('schedule.index', $result);
     }
 
     // ================= STORE SCHEDULE =================
@@ -204,4 +129,6 @@ class ScheduleController extends Controller
             Teacher::where('department_id', $departmentId)->get()
         );
     }
+
+
 }

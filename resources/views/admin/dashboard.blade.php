@@ -155,94 +155,51 @@
                 </div>
 
                 <!-- TABLES -->
-                <div class="row">
+                <!-- RECENT STUDENTS -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <h3 class="card-title">
+                                <i class="fas fa-user-graduate mr-1"></i>
+                                Recent Students
+                            </h3>
+                        </div>
 
-                    <!-- RECENT STUDENTS -->
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header border-0">
-                                <h3 class="card-title">
-                                    <i class="fas fa-user-graduate mr-1"></i>
-                                    Recent Students
-                                </h3>
-                            </div>
+                        <div class="card-body p-0">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Class</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
 
-                            <div class="card-body p-0">
-                                <table class="table table-sm">
-                                    <thead>
+                                <tbody>
+                                    @forelse($enrollments as $enrollment)
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Class</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
+                                            <td>{{ $enrollment->student->name}}</td>
+                                            <td>{{ $enrollment->schedule->class->class_name }}</td>
+                                            <td>{{ $enrollment->created_at->format('Y-m-d') }}</td>
+                                            <td>
+                                                <span class="badge badge-success">
+                                                    Active
+                                                </span>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                    @empty
                                         <tr>
-                                            <td>Mov Vo Reach</td>
-                                            <td>Year 3</td>
-                                            <td>2026-03-10</td>
-                                            <td><span class="badge badge-success">Active</span></td>
+                                            <td colspan="4" class="text-center">
+                                                No enrollments found
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td>Sok Dara</td>
-                                            <td>Year 2</td>
-                                            <td>2026-03-12</td>
-                                            <td><span class="badge badge-warning">Pending</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Chanthy</td>
-                                            <td>Year 1</td>
-                                            <td>2026-03-15</td>
-                                            <td><span class="badge badge-info">New</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                    @endforelse
+                                </tbody>
+
+                            </table>
                         </div>
                     </div>
-
-                    <!-- ATTENDANCE -->
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header border-0">
-                                <h3 class="card-title">
-                                    <i class="fas fa-calendar-check mr-1"></i>
-                                    Attendance Records
-                                </h3>
-                            </div>
-
-                            <div class="card-body p-0">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Student</th>
-                                            <th>Date</th>
-                                            <th>Attendance</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>John Doe</td>
-                                            <td>2026-03-10</td>
-                                            <td><span class="badge badge-success">Present</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jane Smith</td>
-                                            <td>2026-03-10</td>
-                                            <td><span class="badge badge-danger">Absent</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>David Lee</td>
-                                            <td>2026-03-10</td>
-                                            <td><span class="badge badge-success">Present</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>

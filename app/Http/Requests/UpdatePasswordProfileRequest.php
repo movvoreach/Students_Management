@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSubjectRequest extends FormRequest
+class UpdatePasswordProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,11 @@ class StoreSubjectRequest extends FormRequest
      */
     public function rules(): array
     {
-     return [
-        'subject_name' => 'required|string|max:255|unique:subjects,subject_name',
-
-        'department_id' => 'required|integer|exists:departments,id',
+        return [
+            //
+            'current_password'      => 'required',
+            'new_password'          => 'required|min:6',
+            'password_confirmation' => 'required|min:6',
         ];
     }
 }

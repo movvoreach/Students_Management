@@ -48,7 +48,7 @@ class StudentController extends Controller
         $departments = Department::all();
 
         // Pass variable 'departments' to 'resources/views/Student/create.blade.php'
-        return view('Student.create', compact('departments'));
+        return view('student.create', compact('departments'));
     }
 
     public function store(StoreStudentRequest $request)

@@ -27,13 +27,13 @@ class TeacherController extends Controller
         // dd($request->all());
 
         $teachers = $this->teacherService->getWithsearchFilters($request->all());
-        return view('Teacher.index', compact('teachers', ));
+        return view('teacher.index', compact('teachers', ));
     }
 
     public function create()
     {
         $departments = Department::all();
-        return view('Teacher.create', compact('departments'));
+        return view('teacher.create', compact('departments'));
     }
 
     // =====================
@@ -86,7 +86,7 @@ class TeacherController extends Controller
     {
         $teachers = $this->teacherService->getWithsearchFilters($request);
 
-        return view('Teacher.index', compact('teachers'));
+        return view('teacher.index', compact('teachers'));
     }
     public function show($id)
     {

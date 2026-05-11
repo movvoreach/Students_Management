@@ -45,7 +45,7 @@ Route::middleware(['auth', 'role:teacher|student|admin'])->group(function () {
     Route::get('/get-teachers/{id}', [ScheduleController::class, 'getTeachers'])->middleware('permission:view schedule');
 
     // STUDENT
-    // Route::get('/student/{id}/show', [ScheduleController::class, 'studentSchedule'])->name('schedule.student.detail')->middleware('permission:view schedule');
+    Route::get('/student/{id}/show', [ScheduleController::class, 'studentSchedule'])->name('schedule.student.detail')->middleware('permission:view schedule');
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.show')->middleware('permission:view profile');
 
